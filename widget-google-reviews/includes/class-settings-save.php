@@ -66,7 +66,7 @@ class Settings_Save {
         }
 
         if (isset($_POST['install'])) {
-            $install_multisite = sanitize_text_field(wp_unslash($_POST['install_multisite']));
+            $install_multisite = isset($_POST['install_multisite']) ? sanitize_text_field(wp_unslash($_POST['install_multisite'])) : null;
             $this->activator->drop_db($install_multisite);
             $this->activator->delete_all_options($install_multisite);
             $this->activator->delete_all_feeds($install_multisite);

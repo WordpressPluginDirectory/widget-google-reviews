@@ -24,7 +24,7 @@ msgstr "Google uživatel"
 msgid "read more"
 msgstr "celá recenze"
 
-msgid "Next Reviews"
+msgid "More reviews"
 msgstr "Další recenze"
 
 msgid "Based on %s reviews"

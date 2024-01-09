@@ -14,7 +14,7 @@ msgstr ""
 msgid "Google Rating"
 msgstr "Google Рейтинг"
 
-msgid "Next Reviews"
+msgid "More reviews"
 msgstr "Следующие отзывы"
 
 msgid "See All Reviews"

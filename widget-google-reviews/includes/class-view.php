@@ -150,7 +150,7 @@ class View {
                     </div>
                     <?php if ($options->pagination > 0 && $hr) { ?>
                     <a class="wp-google-url" href="#" onclick="return rplg_next_reviews.call(this, 'grw', <?php echo $options->pagination; ?>);">
-                        <?php echo __('Next Reviews', 'widget-google-reviews'); ?>
+                        <?php echo __('More reviews', 'widget-google-reviews'); ?>
                     </a>
                     <?php } ?>
                 </div>
@@ -311,7 +311,7 @@ class View {
         </div>
         <?php if ($options->pagination > 0 && $hr) { ?>
         <a class="wp-google-url" href="#" onclick="return rplg_next_reviews.call(this, 'wp-google', <?php echo $options->pagination; ?>);">
-            <?php echo __('Next Reviews', 'widget-google-reviews'); ?>
+            <?php echo __('More reviews', 'widget-google-reviews'); ?>
         </a>
         <?php
         } else {

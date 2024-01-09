@@ -30,7 +30,7 @@ class Feed_Shortcode {
         }
 
         if (isset($atts['place_id']) && strlen($atts['place_id']) > 0) {
-            $feed = $this->feed_old->get_feed($atts['place_id'], $atts);
+            $feed = $this->feed_old->get_feed(esc_attr($atts['place_id']), $atts);
 
         } else {
             $atts = shortcode_atts(array('id' => 0), $atts, 'grw');

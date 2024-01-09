@@ -105,7 +105,6 @@ class Activator {
                 foreach($place_ids as $place_id) {
                     //TODO: grw_refresh_reviews(array($place_id));
                 }
-            break;
 
             case version_compare($last_active_version, '1.8.7', '<'):
                 $row = $wpdb->get_results(
@@ -115,14 +114,12 @@ class Activator {
                 if(empty($row)){
                     $wpdb->query("ALTER TABLE " . $wpdb->prefix . Database::REVIEW_TABLE . " ADD hide VARCHAR(1) DEFAULT '' NOT NULL");
                 }
-            break;
 
             case version_compare($last_active_version, '2.0.1', '<'):
                 $grw_auth_code = get_option('grw_auth_code');
                 if (!$grw_auth_code || strlen($grw_auth_code) == 0) {
                     update_option('grw_auth_code', $this->random_str(127));
                 }
-            break;
 
             case version_compare($last_active_version, '2.1.5', '<'):
                 if (!function_exists('drop_index') || !function_exists('dbDelta')) {
@@ -164,7 +161,6 @@ class Activator {
                     "INDEX grp_google_place_id (`google_place_id`)".
                     ") " . $wpdb->get_charset_collate() . ";";
                 dbDelta($sql);
-            break;
         }
     }
 

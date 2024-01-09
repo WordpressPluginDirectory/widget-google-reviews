@@ -10,14 +10,14 @@ class Feed_Serializer {
 
     public function feed_save() {
 
-        $raw_data_array = wp_unslash($_POST[Post_Types::FEED_POST_TYPE]);
+        $raw_data_array = $_POST[Post_Types::FEED_POST_TYPE];
 
         $post_id = $this->save($raw_data_array['post_id'], $raw_data_array['title'], $raw_data_array['content']);
 
         // NOT: $referer = empty(wp_get_referer()) ? $raw_data_array['current_url'] : wp_get_referer();
         // COZ: Fatal error: Can't use function return value in write context in .../includes/class-feed-serializer.php on line ...
         $referer = wp_get_referer();
-        $referer = empty($referer) ? $raw_data_array['current_url'] : wp_get_referer();
+        $referer = empty($referer) ? sanitize_text_field(wp_unslash($raw_data_array['current_url'])) : wp_get_referer();
 
         wp_safe_redirect(
             add_query_arg(array(
@@ -36,9 +36,9 @@ class Feed_Serializer {
         check_admin_referer('grw_wpnonce', 'grw_nonce');
 
         $post_id = wp_insert_post(array(
-            'ID'           => $post_id,
-            'post_title'   => $title,
-            'post_content' => $content,
+            'ID'           => sanitize_text_field(wp_unslash($post_id)),
+            'post_title'   => sanitize_text_field(wp_unslash($title)),
+            'post_content' => sanitize_text_field(wp_unslash($content)),
             'post_type'    => Post_Types::FEED_POST_TYPE,
             'post_status'  => 'publish',
         ));

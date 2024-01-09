@@ -19,7 +19,7 @@ class Database {
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         }
 
-        $sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix . "grp_google_place (".
+        $sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix . self::BUSINESS_TABLE . " (".
                "id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,".
                "place_id VARCHAR(80) NOT NULL,".
                "name VARCHAR(255) NOT NULL,".
@@ -37,7 +37,7 @@ class Database {
 
         dbDelta($sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix . "grp_google_review (".
+        $sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix . self::REVIEW_TABLE . " (".
                "id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,".
                "google_place_id BIGINT(20) UNSIGNED NOT NULL,".
                "rating INTEGER NOT NULL,".
@@ -54,7 +54,7 @@ class Database {
 
         dbDelta($sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix . "grp_google_stats (".
+        $sql = "CREATE TABLE IF NOT EXISTS " . $wpdb->prefix . self::STATS_TABLE . " (".
                "id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,".
                "google_place_id BIGINT(20) UNSIGNED NOT NULL,".
                "time INTEGER NOT NULL,".

@@ -4,7 +4,7 @@ Donate link: https://richplugins.com/business-reviews-bundle-wordpress-plugin
 Tags: google, reviews, google reviews, rating, widget, block, reviews plugin, google map, testimonials, google places reviews
 Requires at least: 2.8
 Tested up to: 6.4
-Stable tag: 3.1
+Stable tag: 3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,14 @@ To find out more about who we are and what we do, here are some useful links:
 * Test-feature: weekly reviews auto-updates
 
 == Changelog ==
+
+= 3.2 =
+* Security issue fix (escape shortcode attributes)
+* Improve: database creation code
+* Improve: error message when connecting empty Google place
+* Bugfix: undefined property $rating/$reviews for empty Google place
+* Bugfix: plugin updates when existing install
+* Rename 'next reviews' to 'more reviews' text
 
 = 3.1 =
 * Bugfix: reviews disappear after slider return back

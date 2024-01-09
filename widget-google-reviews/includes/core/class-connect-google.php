@@ -86,8 +86,14 @@ class Connect_Google {
                 $body = wp_remote_retrieve_body($res);
                 $body_json = json_decode($body);
 
-                if ($body_json && isset($body_json->result)) {
-
+                if (!$body_json || !isset($body_json->result)) {
+                    $result = $body_json;
+                    $status = 'failed';
+                } elseif (!isset($body_json->result->rating)) {
+                    $error_msg = 'Google place <a href="' . $body_json->result->url . '" target="_blank">which you try to connect</a> does not have a rating and reviews, it seems it\'s a street address, not a business locations. Please read manual how to find <a href="' . admin_url('admin.php?page=grw-support&grw_tab=fig#place_id') . '" target="_blank">right Place ID</a>.';
+                    $result = array('error_message' => $error_msg);
+                    $status = 'failed';
+                } else {
                     if ($google_api_key && strlen($google_api_key) > 0) {
                         $photo = $this->business_avatar($body_json->result, $google_api_key);
                         $body_json->result->business_photo = $photo;
@@ -106,9 +112,6 @@ class Connect_Google {
                     if ($_POST['feed_id']) {
                         delete_transient('grw_feed_' . GRW_VERSION . '_' . $_POST['feed_id'] . '_reviews', false);
                     }
-                } else {
-                    $result = $body_json;
-                    $status = 'failed';
                 }
                 $response = compact('status', 'result');
             }
@@ -149,7 +152,7 @@ class Connect_Google {
             $body = wp_remote_retrieve_body($res);
             $body_json = json_decode($body);
 
-            if ($body_json && isset($body_json->result)) {
+            if ($body_json && isset($body_json->result) && isset($body_json->result->rating)) {
 
                 if ($api_key_filled) {
                     $photo = $this->business_avatar($body_json->result, $google_api_key);

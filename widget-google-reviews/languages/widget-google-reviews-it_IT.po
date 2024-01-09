@@ -23,7 +23,7 @@ msgstr "Utente di Google"
 msgid "read more"
 msgstr "leggi di più"
 
-msgid "Next Reviews"
+msgid "More reviews"
 msgstr "Altre recensioni"
 
 msgid "Based on %s reviews"
