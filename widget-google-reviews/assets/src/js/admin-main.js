@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
             $rateus_stars = $('#grw-rate_us-feedback-stars');
 
         grw_svg_init();
-        if (window.location.href.indexOf('grw_feed_new=1') > -1) {
+        if (window.location.href.indexOf('grw_feed_id=') > -1 && !window['grw_rateus']) {
             $rateus.addClass('grw-flash-visible');
         }
         $('.wp-star', $rateus).click(function() {
@@ -79,6 +79,7 @@ jQuery(document).ready(function($) {
                 $rateus.addClass('grw-flash-gout');
                 $rateus.removeClass('grw-flash-visible');
                 $rateus.removeClass('grw-flash-gout');
+                window['grw_rateus'] = 1;
             }, 1000);
         }
     }

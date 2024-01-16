@@ -30,7 +30,7 @@ class Feed_Block {
         wp_register_script(
             'grw-reviews-block-js',
             plugins_url('build/index.js', GRW_PLUGIN_FILE),
-            array('wp-plugins', 'wp-edit-post', 'wp-element'),
+            array('wp-block-editor', 'wp-blocks'),
             $this->assets->version()
         );
 

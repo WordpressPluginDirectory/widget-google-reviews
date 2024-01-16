@@ -399,7 +399,7 @@ function grw_feed_save_ajax() {
             window.location.href = window.location.href + '&grw_feed_id=' + post_id + '&grw_feed_new=1';
         } else {
             var $rateus = jQuery('#grw-rate_us');
-            if ($rateus.length && !$rateus.hasClass('grw-flash-visible')) {
+            if ($rateus.length && !$rateus.hasClass('grw-flash-visible') && !window['grw_rateus']) {
                 $rateus.addClass('grw-flash-visible');
             }
         }

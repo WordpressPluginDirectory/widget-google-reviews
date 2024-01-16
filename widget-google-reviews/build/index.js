@@ -50,7 +50,7 @@
                 el(
                     Button,
                     {
-                        text: __('Creat new reviews widget'),
+                        text: __('Create new reviews widget'),
                         href: grwBlockData.builderUrl,
                         target: '_blank'
                     }

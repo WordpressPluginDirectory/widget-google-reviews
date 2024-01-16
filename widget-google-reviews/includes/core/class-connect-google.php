@@ -12,7 +12,7 @@ class Connect_Google {
     public function hide_review() {
         global $wpdb;
 
-        if (current_user_can('manage_options')) {
+        if (current_user_can('editor') || current_user_can('administrator')) {
             if (isset($_POST['grw_wpnonce']) === false) {
                 $error = __('Unable to call request. Make sure you are accessing this page from the Wordpress dashboard.', 'widget-google-reviews');
                 $response = compact('error');

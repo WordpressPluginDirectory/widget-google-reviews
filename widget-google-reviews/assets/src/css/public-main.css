@@ -624,16 +624,17 @@
 
 /*-------------------------------- writereview button --------------------------------*/
 .wp-gr .wp-google-wr {
-    margin: 15px auto 8px -6px!important;
+    margin: 15px auto 8px!important;
 }
 
 .wp-gr .wp-google-wr a {
     color: #fff!important;
-    padding: 8px 20px 10px!important;
+    padding: 6px 15px 10px!important;
     outline: none !important;
     border-radius: 27px!important;
     background: #0a6cff!important;
     white-space: nowrap!important;
+    vertical-align: middle!important;
     text-shadow: 1px 1px 0 #888!important;
     box-shadow: 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24)!important;
     user-select: none!important;
@@ -652,6 +653,8 @@
 
 .wp-gr .wp-google-wr a svg {
     display: inline-block;
+    width: 16px;
+    height: 16px;
     padding: 1px;
     margin: 0 0 0 4px;
     background: #fff;
