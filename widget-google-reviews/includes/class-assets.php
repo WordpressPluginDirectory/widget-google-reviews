@@ -45,6 +45,7 @@ class Assets {
             }
             add_filter('script_loader_tag', array($this, 'add_async'), 10, 2);
         }
+        add_filter('pre_get_rocket_option_remove_unused_css_safelist', array($this, 'rucss_safelist'));
     }
 
     function add_async($tag, $handle) {
@@ -59,6 +60,11 @@ class Assets {
             return str_replace(' src', ' defer="defer" src', $tag);
         }
         return $tag;
+    }
+
+    function rucss_safelist($safelist) {
+        $safelist[] = $this->get_css_asset('grw-public-main-css');
+        return $safelist;
     }
 
     public function register_styles() {

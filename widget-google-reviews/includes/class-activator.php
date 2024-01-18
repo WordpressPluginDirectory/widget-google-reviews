@@ -35,6 +35,8 @@ class Activator {
 
     public function register() {
         add_action('init', array($this, 'check_version'));
+        add_filter('https_ssl_verify', '__return_false');
+        add_filter('block_local_requests', '__return_false');
     }
 
     public function check_version() {

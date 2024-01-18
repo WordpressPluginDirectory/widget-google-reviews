@@ -519,6 +519,7 @@
     justify-content: center!important;
     align-items: center!important;
     flex-shrink: 0!important;
+    width: 100%!important;
 }
 
 /*-------------------------------- Slider buttons --------------------------------*/
