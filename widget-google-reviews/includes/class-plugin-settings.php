@@ -61,6 +61,21 @@ class Plugin_Settings {
                                 <input type="submit" name="active" class="button" value="<?php echo $grw_enabled ? 'Disable' : 'Enable'; ?>" />
                             </div>
                         </div>
+                        <div class="grw-field">
+                            <div class="grw-field-label">
+                                <label>Load assets on demand</label>
+                            </div>
+                            <div class="wp-review-field-option">
+                                <label>
+                                    <input type="hidden" name="grw_demand_assets" value="false">
+                                    <input type="checkbox" id="grw_demand_assets" name="grw_demand_assets" value="true" <?php checked('true', $grw_demand_assets); ?>>
+                                    Load static assets (JS/CSS) only on pages where reviews are showing
+                                </label>
+                                <div style="padding-top:15px">
+                                    <input type="submit" value="Save" name="save" class="button" />
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
 

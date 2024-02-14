@@ -82,7 +82,7 @@ class Builder_Page {
                             <?php if ($feed_inited) { ?>
                             <label>
                                 <span id="grw_sc_msg">Shortcode </span>
-                                <input id="grw_sc" type="text" value="[grw id=&quot;<?php echo esc_attr($feed_id); ?>&quot;]" data-grw-shortcode="[grw id=&quot;<?php echo esc_attr($feed_id); ?>&quot;]" onclick="this.select(); document.execCommand('copy'); window.grw_sc_msg.innerHTML = 'Shortcode Copied! ';" readonly/>
+                                <input id="grw_sc" type="text" value="[grw id=<?php echo esc_attr($feed_id); ?>]" data-grw-shortcode="[grw id=<?php echo esc_attr($feed_id); ?>]" onclick="this.select(); document.execCommand('copy'); window.grw_sc_msg.innerHTML = 'Shortcode Copied! ';" readonly/>
                             </label>
                             <div class="grw-toolbar-options">
                                 <label title="Sometimes, you need to use this shortcode in PHP, for instance in header.php or footer.php files, in this case use this option"><input type="checkbox" onclick="var el = window.grw_sc; if (this.checked) { el.value = '&lt;?php echo do_shortcode( \'' + el.getAttribute('data-grw-shortcode') + '\' ); ?&gt;'; } else { el.value = el.getAttribute('data-grw-shortcode'); } el.select();document.execCommand('copy'); window.grw_sc_msg.innerHTML = 'Shortcode Copied! ';"/>Use in PHP</label>

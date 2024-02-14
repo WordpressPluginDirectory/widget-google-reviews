@@ -23,6 +23,7 @@ class Activator {
             'grw_debug_mode',
             'grw_feed_ids',
             'grw_do_activation',
+            'grw_demand_assets',
             'grw_revupd_cron',
             'grw_revupd_cron_timeout',
             'grw_revupd_cron_log',

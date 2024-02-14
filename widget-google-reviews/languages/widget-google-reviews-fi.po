@@ -26,8 +26,8 @@ msgstr "lue lisää"
 msgid "More reviews"
 msgstr "Seuraavat arvostelut"
 
-msgid "Write a review"
-msgstr "Kirjoita arvostelu"
-
 msgid "Based on %s reviews"
 msgstr "Perustuu %s arvioon"
+
+msgid "review us on"
+msgstr "arvostele meitä"

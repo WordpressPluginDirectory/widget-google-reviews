@@ -29,5 +29,5 @@ msgstr "Siguientes"
 msgid "Based on %s reviews"
 msgstr "Basado en %s opiniones"
 
-msgid "Ready to review?"
-msgstr "¿Listo para revisar?"
+msgid "review us on"
+msgstr "revísanos en"
