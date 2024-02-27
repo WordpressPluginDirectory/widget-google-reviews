@@ -4,7 +4,7 @@ Donate link: https://richplugins.com/business-reviews-bundle-wordpress-plugin
 Tags: google, reviews, google reviews, rating, widget, block, reviews plugin, google map, testimonials, google places reviews
 Requires at least: 3.0.1
 Tested up to: 6.4
-Stable tag: 3.6
+Stable tag: 3.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ To find out more about who we are and what we do, here are some useful links:
 * Test-feature: weekly reviews auto-updates
 
 == Changelog ==
+
+= 3.6.1 =
+* Bugfix: twice CSS file in Remove Unused CSS safelist for WP Rocket plugin
 
 = 3.6 =
 * Bugfix: fixed Remove Unused CSS safelist for WP Rocket plugin

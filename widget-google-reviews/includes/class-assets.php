@@ -64,7 +64,7 @@ class Assets {
 
     function rucss_safelist($safelist) {
         $css_main = $this->get_css_asset('grw-public-main-css');
-        if (array_search($css_main, $safelist)) {
+        if (array_search($css_main, $safelist) !== false) {
             return $safelist;
         }
         $safelist[] = $css_main;
