@@ -16,6 +16,7 @@ class Activator {
         return array(
             'grw_version',
             'grw_active',
+            'grw_async_css',
             'grw_google_api_key',
             'grw_language',
             'grw_activation_time',

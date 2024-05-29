@@ -133,10 +133,10 @@ jQuery(document).ready(function($) {
                 data     : data,
                 success  : function(res) {
 
-                    if (!res) {
+                    /*if (!res) {
                         window.location.href = GRW_VARS.builderUrl;
                         return;
-                    }
+                    }*/
 
                     var place = res.places.length > 1 ? res.places.find(x => x.id == pid) : res.places[0];
 

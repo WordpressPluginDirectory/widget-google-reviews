@@ -44,7 +44,7 @@ class Settings_Save {
         }
 
         if (isset($_POST['save'])) {
-            $fields = array('grw_demand_assets', 'grw_minified_assets', 'grw_google_api_key');
+            $fields = array('grw_async_css', 'grw_demand_assets', 'grw_minified_assets', 'grw_google_api_key');
             foreach ($fields as $field) {
 
                 if (isset($_POST[$field])) {

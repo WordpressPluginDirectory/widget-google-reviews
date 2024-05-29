@@ -69,14 +69,14 @@ class Connect_Google {
                 $id = sanitize_text_field(wp_unslash($_POST['id']));
                 $lang = sanitize_text_field(wp_unslash($_POST['lang']));
                 $local_img = sanitize_text_field(wp_unslash($_POST['local_img']));
+                $token = sanitize_text_field(wp_unslash($_POST['token']));
 
                 if ($google_api_key && strlen($google_api_key) > 0) {
                     $url = $this->api_url($id, $google_api_key, $lang);
                 } else {
-                    $url = 'https://app.richplugins.com/gpaw/get/json' .
-                           '?siteurl=' . get_option('siteurl') .
-                           '&authcode=' . get_option('grw_auth_code') .
-                           '&pid=' . $id;
+                    $url = 'https://app.richplugins.com/gpaw2/get/json?pid=' . $id . '&token=' . $token .
+                           '&siteurl=' . get_option('siteurl') . '&authcode=' . get_option('grw_auth_code');
+
                     if ($lang && strlen($lang) > 0) {
                         $url = $url . '&lang=' . $lang;
                     }

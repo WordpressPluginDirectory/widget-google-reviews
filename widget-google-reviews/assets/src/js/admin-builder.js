@@ -61,23 +61,8 @@ var GRW_HTML_CONTENT = '' +
     '<div class="grw-builder-platforms grw-builder-inside">' +
 
         '<div class="grw-builder-connect grw-connect-google">Google Connection</div>' +
-        '<div id="grw-connect-wizard" title="Easy steps to connect Google Reviews" style="display:none;">' +
-            '<p>' +
-                '<span>1</span> ' +
-                'Find your Google place on the map below (<u class="grw-wiz-arr">Enter a location</u>) and copy found <u><b>Place ID</b></u>' +
-            '</p>' +
-            '<iframe src="https://geo-devrel-javascript-samples.web.app/samples/places-placeid-finder/app/dist" loading="lazy" style="width:100%;height:250px"></iframe>' +
-            '<small style="font-size:13px;color:#555">If you can\'t find your place on this map, please read <a href="' + GRW_VARS.supportUrl + '&grw_tab=fig#place_id" target="_blank">this manual how to find any Google Place ID</a>.</small>' +
-            '<p>' +
-                '<span>2</span> ' +
-                'Paste copied <u><b>Place ID</b></u> in this field and select language if needed' +
-            '</p>' +
-            '<p>' +
-                '<input type="text" class="grw-connect-id" value="" placeholder="Place ID" />' +
-                '<select class="grw-connect-lang"><option value="" selected="selected">Choose language if needed</option><option value="ar">Arabic</option><option value="bg">Bulgarian</option><option value="bn">Bengali</option><option value="ca">Catalan</option><option value="cs">Czech</option><option value="da">Danish</option><option value="de">German</option><option value="el">Greek</option><option value="en">English</option><option value="es">Spanish</option><option value="eu">Basque</option><option value="eu">Basque</option><option value="fa">Farsi</option><option value="fi">Finnish</option><option value="fil">Filipino</option><option value="fr">French</option><option value="gl">Galician</option><option value="gu">Gujarati</option><option value="hi">Hindi</option><option value="hr">Croatian</option><option value="hu">Hungarian</option><option value="id">Indonesian</option><option value="it">Italian</option><option value="iw">Hebrew</option><option value="ja">Japanese</option><option value="kn">Kannada</option><option value="ko">Korean</option><option value="lt">Lithuanian</option><option value="lv">Latvian</option><option value="ml">Malayalam</option><option value="mr">Marathi</option><option value="nl">Dutch</option><option value="no">Norwegian</option><option value="pl">Polish</option><option value="pt">Portuguese</option><option value="pt-BR">Portuguese (Brazil)</option><option value="pt-PT">Portuguese (Portugal)</option><option value="ro">Romanian</option><option value="ru">Russian</option><option value="sk">Slovak</option><option value="sl">Slovenian</option><option value="sr">Serbian</option><option value="sv">Swedish</option><option value="ta">Tamil</option><option value="te">Telugu</option><option value="th">Thai</option><option value="tl">Tagalog</option><option value="tr">Turkish</option><option value="uk">Ukrainian</option><option value="vi">Vietnamese</option><option value="zh">Chinese (Simplified)</option><option value="zh-Hant">Chinese (Traditional)</option></select>' +
-            '</p>' +
-            '<p><span>3</span> Click CONNECT GOOGLE button</p>' +
-            '<button class="grw-connect-btn">Connect Google</button>' +
+        '<div id="grw-connect-wizard" style="display:none;">' +
+            '<iframe id="gpidc" src="https://app.richplugins.com/gpidc?authcode={{authcode}}" style="width:100%;height:400px"></iframe>' +
             '<small class="grw-connect-error"></small>' +
         '</div>' +
         '<div class="grw-connections"></div>' +
@@ -291,11 +276,9 @@ function grw_builder_init($, data) {
     var el = document.querySelector(data.el);
     if (!el) return;
 
-    el.innerHTML = GRW_HTML_CONTENT;
+    el.innerHTML = GRW_HTML_CONTENT.replace('{{authcode}}', data.authcode);
 
     var $connect_wizard_el = $('#grw-connect-wizard');
-        //connect_google_el = el.querySelector('.grw-connect-google-inside'),
-        //google_pid_el = el.querySelector('.grw-connect-id');
 
     if (data.conns && data.conns.connections && data.conns.connections.length) {
         grw_deserialize_connections($, el, data);
@@ -308,12 +291,34 @@ function grw_builder_init($, data) {
             closeOnEscape: false,
             open: function() { $(".ui-dialog-titlebar-close").hide() }
         });
-        //connect_google_el.style = '';
-        //google_pid_el.focus();
     }
 
-    // Google Connect
-    grw_connection($, /*connect_google_el*/$connect_wizard_el[0], 'google', data.authcode);
+    // GPIDC
+    window.onmessage = function(e) {
+        if (e.origin !== 'https://app.richplugins.com') return;
+        if (e.data) {
+            let data = e.data;
+            switch (data.action) {
+                case 'get_place':
+                    $.post(ajaxurl, {
+                        pid       : data.pid,
+                        token     : data.token,
+                        action    : 'grw_get_place',
+                        grw_nonce : jQuery('#grw_nonce').val()
+                    }, function(res) {
+                        if (res.status == 'success') {
+                            window.gpidc.contentWindow.postMessage({data: res, action: 'set_place'}, '*');
+                        } else {
+                            grw_connect_error($, res.result.error_message);
+                        }
+                    });
+                    break;
+                case 'connect':
+                    grw_connect_ajax($, el, data, data.authcode, 1);
+                    break;
+            }
+        }
+    };
 
     $('.grw-connect-options input[type="text"],.grw-connect-options textarea').keyup(function() {
         clearTimeout(GRW_AUTOSAVE_TIMEOUT);
@@ -329,7 +334,6 @@ function grw_builder_init($, data) {
     });
 
     $('.grw-builder-connect.grw-connect-google').click(function () {
-        //google_pid_el.focus();
         $connect_wizard_el.dialog({modal: true, width: '50%', maxWidth: '600px'});
     });
 
@@ -348,7 +352,6 @@ function grw_builder_init($, data) {
     });
 
     $('#grw_save').click(function() {
-        //grw_feed_save_ajax();
         grw_serialize_connections();
         return false;
     });
@@ -410,26 +413,6 @@ function grw_feed_save_ajax() {
     });
 }
 
-function grw_feed_save() {
-    if (!window.grw_title.value) {
-        window.grw_title.focus();
-        return false;
-    }
-
-    var content = document.getElementById('grw-builder-connection').value;
-    if (content) {
-        var json = JSON.parse(content)
-        if (json) {
-            if (json.connections && json.connections.length) {
-                return true;
-            }
-        }
-    }
-
-    alert("Please click 'CONNECT GOOGLE' and connect your Google reviews then save this widget");
-    return false;
-}
-
 function grw_review_hide($this) {
 
     jQuery.post(ajaxurl, {
@@ -451,36 +434,9 @@ function grw_review_hide($this) {
     }, 'json');
 }
 
-function grw_connection($, el, platform, authcode) {
-    var connect_btn = el.querySelector('.grw-connect-btn');
-    $(connect_btn).click(function() {
-
-        var connect_id_el = el.querySelector('.grw-connect-id');
-            //connect_key_el = el.querySelector('.grw-connect-key');
-
-        if (!connect_id_el.value) {
-            connect_id_el.focus();
-            return false;
-        }/* else if (!connect_key_el.value) {
-            connect_key_el.focus();
-            return false;
-        }*/
-
-        var id = (platform == 'yelp' ? /.+\/biz\/(.*?)(\?|\/|$)/.exec(connect_id_el.value)[1] : connect_id_el.value),
-            lang = el.querySelector('.grw-connect-lang').value;
-            //key = connect_key_el.value;
-
-        connect_btn.innerHTML = 'Please wait...';
-        connect_btn.disabled = true;
-
-        grw_connect_ajax($, el, {id: id, lang: lang, platform: platform, local_img: true}, authcode, 1);
-        return false;
-    });
-}
-
 function grw_connect_ajax($, el, params, authcode, attempt) {
 
-    var platform = params.platform,
+    var platform = 'google',
         connect_btn = el.querySelector('.grw-connect-btn');
 
     window.grw_save.innerText = 'Auto save, wait';
@@ -490,7 +446,8 @@ function grw_connect_ajax($, el, params, authcode, attempt) {
 
         id          : decodeURIComponent(params.id),
         lang        : params.lang,
-        local_img   : params.local_img,
+        local_img   : params.local_img || false,
+        token       : params.token,
         feed_id     : $('input[name="grw_feed[post_id]"]').val(),
         grw_wpnonce : $('#grw_nonce').val(),
         action      : 'grw_connect_google',
@@ -500,10 +457,7 @@ function grw_connect_ajax($, el, params, authcode, attempt) {
 
         console.log('grw_connect_debug:', res);
 
-        connect_btn.innerHTML = 'Connect ' + (platform.charAt(0).toUpperCase() + platform.slice(1));
-        connect_btn.disabled = false;
-
-        var error_el = el.querySelector('.grw-connect-error');
+        var error_el = document.querySelector('.grw-connect-error');
 
         if (res.status == 'success') {
 
@@ -528,37 +482,44 @@ function grw_connect_ajax($, el, params, authcode, attempt) {
             grw_serialize_connections();
 
         } else {
-
-            switch (res.result.error_message) {
-
-                case 'usage_limit':
-                    $('#dialog').dialog({width: '50%', maxWidth: '600px'});
-                    break;
-
-                case 'bot_check':
-                    if (attempt > 1) {
-                        return;
-                    }
-                    grw_popup('https://app.richplugins.com/gpaw/botcheck?authcode=' + authcode, 640, 480, function() {
-                        grw_connect_ajax($, el, params, authcode, attempt + 1);
-                    });
-                    break;
-
-                default:
-                    if (res.result.error_message.indexOf('The provided Place ID is no longer valid') >= 0) {
-                        error_el.innerHTML = 'It seems Google place which you are trying to connect ' +
-                            'does not have a physical address (it\'s virtual or service area), ' +
-                            'unfortunately, Google Places API does not support such locations, it\'s a limitation of Google, not the plugin.<br><br>' +
-                            'However, you can try to connect your Google reviews in our new cloud service ' +
-                            '<a href="https://trust.reviews" target="_blank">Trust.Reviews</a> ' +
-                            'and show it on your WordPress site through universal <b>HTML/JavaScript</b> code.';
-                    } else {
-                        error_el.innerHTML = '<b>Error</b>: ' + res.result.error_message;
-                    }
-            }
+            grw_connect_error($, res.result.error_message, function() {
+                if (attempt > 1) return;
+                grw_popup('https://app.richplugins.com/gpaw/botcheck?authcode=' + authcode, 640, 480, function() {
+                    grw_connect_ajax($, el, params, authcode, attempt + 1);
+                });
+            });
         }
 
     }, 'json');
+}
+
+function grw_connect_error($, error_message, cb) {
+
+    let error_el = document.querySelector('.grw-connect-error');
+    error_el.innerHTML = '';
+
+    switch (error_message) {
+
+        case 'usage_limit':
+            $('#dialog').dialog({width: '50%', maxWidth: '600px'});
+            break;
+
+        case 'bot_check':
+            cb && cb();
+            break;
+
+        default:
+            if (error_message.indexOf('The provided Place ID is no longer valid') >= 0) {
+                error_el.innerHTML = 'It seems Google place which you are trying to connect ' +
+                    'does not have a physical address (it\'s virtual or service area), ' +
+                    'unfortunately, Google Places API does not support such locations, it\'s a limitation of Google, not the plugin.<br><br>' +
+                    'However, you can try to connect your Google reviews in our new cloud service ' +
+                    '<a href="https://trust.reviews" target="_blank">Trust.Reviews</a> ' +
+                    'and show it on your WordPress site through universal <b>HTML/JavaScript</b> code.';
+            } else {
+                error_el.innerHTML = '<b>Error</b>: ' + error_message;
+            }
+    }
 }
 
 function grw_connection_add($, el, conn, authcode, checked) {
@@ -611,17 +572,17 @@ function grw_connection_add($, el, conn, authcode, checked) {
             conn.lang = this.value;
             connected_el.id = grw_connection_id(conn);
             connected_el.setAttribute('data-lang', this.value);
-            grw_connect_ajax($, el, conn, authcode, 1);
+            window.gpidc.contentWindow.postMessage({params: conn, action: 'connect'}, '*');
             return false;
         });
 
         $('input[name="local_img"]', connected_el).unbind('click').click(function() {
             conn.local_img = this.checked;
-            grw_connect_ajax($, el, conn, authcode, 1);
+            window.gpidc.contentWindow.postMessage({params: conn, action: 'connect'}, '*');
         });
 
         $('.grw-connect-reconnect', connected_el).click(function() {
-            grw_connect_ajax($, el, conn, authcode, 1);
+            window.gpidc.contentWindow.postMessage({params: conn, action: 'connect'}, '*');
             return false;
         });
 

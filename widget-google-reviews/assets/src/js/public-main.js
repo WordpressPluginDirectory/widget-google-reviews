@@ -131,21 +131,24 @@ function _grw_init_slider(el) {
             setTimeout(init, 300);
         }
     }
-    init();
-
-    window.addEventListener('resize', function() {
-        var vv = reviewsBack();
-        clearTimeout(resizeTimout);
-        resizeTimout = setTimeout(resize, 150, vv);
-    });
 
     if (REVIEWS_ELEM) {
+        init();
+
+        window.addEventListener('resize', function() {
+            var vv = reviewsBack();
+            clearTimeout(resizeTimout);
+            resizeTimout = setTimeout(resize, 150, vv);
+        });
+
         REVIEWS_ELEM.addEventListener('scroll', function() {
             setTimeout(dotsinit, 200);
             if (window.rplg_blazy) {
                 window.rplg_blazy.revalidate();
             }
         });
+    } else {
+        SLIDER_ELEM.className = 'grw-row';
     }
 
     function resize(vv) {

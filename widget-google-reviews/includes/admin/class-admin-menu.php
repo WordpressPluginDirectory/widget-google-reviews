@@ -7,6 +7,7 @@ use WP_Rplg_Google_Reviews\Includes\Post_Types;
 class Admin_Menu {
 
     public function __construct() {
+
     }
 
     public function register() {

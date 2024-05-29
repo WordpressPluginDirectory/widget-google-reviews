@@ -43,12 +43,17 @@ class Assets {
                 add_action('wp_enqueue_scripts', array($this, 'enqueue_public_styles'));
                 add_action('wp_enqueue_scripts', array($this, 'enqueue_public_scripts'));
             }
-            add_filter('script_loader_tag', array($this, 'add_async'), 10, 2);
+            add_filter('script_loader_tag', array($this, 'script_async'), 10, 2);
+
+            $async_css = get_option('grw_async_css');
+            if ($async_css === 'true') {
+                add_filter('style_loader_tag', array($this, 'style_async'), 10, 2);
+            }
         }
         add_filter('get_rocket_option_remove_unused_css_safelist', array($this, 'rucss_safelist'));
     }
 
-    function add_async($tag, $handle) {
+    function script_async($tag, $handle) {
         $js_assets = array(
             'grw-admin-main-js'    => 'js/admin-main',
             'grw-admin-builder-js' => 'js/admin-builder',
@@ -58,6 +63,18 @@ class Assets {
         );
         if (isset($handle) && array_key_exists($handle, $js_assets)) {
             return str_replace(' src', ' defer="defer" src', $tag);
+        }
+        return $tag;
+    }
+
+    function style_async($tag, $handle) {
+        $css_assets = array(
+            'grw-admin-main-css'   => 'css/admin-main',
+            'grw-public-clean-css' => 'css/public-clean',
+            'grw-public-main-css'  => 'css/public-main',
+        );
+        if (isset($handle) && array_key_exists($handle, $css_assets)) {
+            return str_replace(" rel='stylesheet'", " rel='preload' as='style' onload='this.onload=null;this.rel=\"stylesheet\";window.dispatchEvent(new Event(\"resize\"))'", $tag);
         }
         return $tag;
     }

@@ -6,24 +6,39 @@ use WP_Rplg_Google_Reviews\Includes\Core\Core;
 
 class Plugin_Overview {
 
-    public function __construct() {
+    private $feed_deserializer;
+    private $builder_page;
+
+    public function __construct($feed_deserializer, $builder_page) {
+        $this->feed_deserializer = $feed_deserializer;
+        $this->builder_page = $builder_page;
     }
 
     public function register() {
         add_action('grw_admin_page_grw', array($this, 'init'));
-        add_action('grw_admin_page_grw', array($this, 'render'));
+
+        $render_function;
+        $feed_count = $this->feed_deserializer->get_feed_count();
+        if ($feed_count < 1) {
+            $render_function = array($this, 'connect');
+        } else {
+            $render_function = array($this, 'render');
+        }
+
+        add_action('grw_admin_page_grw', $render_function);
     }
 
     public function init() {
 
     }
 
+    public function connect() {
+        $this->builder_page->render(null);
+    }
+
     public function render() {
-
         wp_nonce_field('grw_wpnonce', 'grw_nonce');
-
         wp_enqueue_script('grw-admin-apexcharts-js');
-
         ?>
 
         <div class="grw-page-title">

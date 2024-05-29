@@ -4,19 +4,35 @@ namespace WP_Rplg_Google_Reviews\Includes;
 
 class Plugin_Settings {
 
+    private $feed_deserializer;
+    private $builder_page;
     private $debug_info;
 
-    public function __construct(Debug_Info $debug_info) {
+    public function __construct($feed_deserializer, $builder_page, $debug_info) {
+        $this->feed_deserializer = $feed_deserializer;
+        $this->builder_page = $builder_page;
         $this->debug_info = $debug_info;
     }
 
     public function register() {
+        $render_func;
+        $feed_count = $this->feed_deserializer->get_feed_count();
+        if ($feed_count < 1) {
+            $render_func = array($this, 'connect');
+        } else {
+            $render_func = array($this, 'render');
+        }
+
         add_action('grw_admin_page_grw-settings', array($this, 'init'));
-        add_action('grw_admin_page_grw-settings', array($this, 'render'));
+        add_action('grw_admin_page_grw-settings', $render_func);
     }
 
     public function init() {
 
+    }
+
+    public function connect() {
+        $this->builder_page->render(null);
     }
 
     public function render() {
@@ -24,6 +40,7 @@ class Plugin_Settings {
         $tab = isset($_GET['grw_tab']) && strlen($_GET['grw_tab']) > 0 ? sanitize_text_field(wp_unslash($_GET['grw_tab'])) : 'active';
 
         $grw_enabled         = get_option('grw_active') == '1';
+        $async_css           = get_option('grw_async_css');
         $grw_demand_assets   = get_option('grw_demand_assets');
         $grw_minified_assets = get_option('grw_minified_assets');
         $grw_google_api_key  = get_option('grw_google_api_key');
@@ -59,6 +76,18 @@ class Plugin_Settings {
                             <div class="wp-review-field-option">
                                 <?php wp_nonce_field('grw-wpnonce_active', 'grw-form_nonce_active'); ?>
                                 <input type="submit" name="active" class="button" value="<?php echo $grw_enabled ? 'Disable' : 'Enable'; ?>" />
+                            </div>
+                        </div>
+                        <div class="grw-field">
+                            <div class="grw-field-label">
+                                <label>Async CSS assets</label>
+                            </div>
+                            <div class="wp-review-field-option">
+                                <label>
+                                    <input type="hidden" name="grw_async_css" value="false">
+                                    <input type="checkbox" id="grw_async_css" name="grw_async_css" value="true" <?php checked('true', $async_css); ?>>
+                                    Asynchronous CSS loads in the background
+                                </label>
                             </div>
                         </div>
                         <div class="grw-field">
