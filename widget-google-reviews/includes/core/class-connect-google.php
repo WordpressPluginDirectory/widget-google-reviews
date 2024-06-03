@@ -64,61 +64,66 @@ class Connect_Google {
                         update_option('grw_google_api_key', $key);
                     }
                 }
-                $google_api_key = get_option('grw_google_api_key');
-
                 $id = sanitize_text_field(wp_unslash($_POST['id']));
                 $lang = sanitize_text_field(wp_unslash($_POST['lang']));
                 $local_img = sanitize_text_field(wp_unslash($_POST['local_img']));
                 $token = sanitize_text_field(wp_unslash($_POST['token']));
+                $google_api_key = get_option('grw_google_api_key');
 
                 if ($google_api_key && strlen($google_api_key) > 0) {
+
                     $url = $this->api_url($id, $google_api_key, $lang);
+                    $response = $this->call_google($url, $local_img, $google_api_key);
+
+                    $url = $this->api_url($id, $google_api_key, $lang, 'newest');
+
                 } else {
                     $url = 'https://app.richplugins.com/gpaw2/get/json?pid=' . $id . '&token=' . $token .
-                           '&siteurl=' . get_option('siteurl') . '&authcode=' . get_option('grw_auth_code');
-
-                    if ($lang && strlen($lang) > 0) {
-                        $url = $url . '&lang=' . $lang;
-                    }
+                           '&siteurl=' . get_option('siteurl') . '&authcode=' . get_option('grw_auth_code') .
+                           ($lang && strlen($lang) > 0 ? '&lang=' . $lang : '');
                 }
 
-                $res = wp_remote_get($url);
-                $body = wp_remote_retrieve_body($res);
-                $body_json = json_decode($body);
+                $response = $this->call_google($url, $local_img, $google_api_key);
 
-                if (!$body_json || !isset($body_json->result)) {
-                    $result = $body_json;
-                    $status = 'failed';
-                } elseif (!isset($body_json->result->rating)) {
-                    $error_msg = 'Google place <a href="' . $body_json->result->url . '" target="_blank">which you try to connect</a> does not have a rating and reviews, it seems it\'s a street address, not a business locations. Please read manual how to find <a href="' . admin_url('admin.php?page=grw-support&grw_tab=fig#place_id') . '" target="_blank">right Place ID</a>.';
-                    $result = array('error_message' => $error_msg);
-                    $status = 'failed';
-                } else {
-                    if ($google_api_key && strlen($google_api_key) > 0) {
-                        $photo = $this->business_avatar($body_json->result, $google_api_key);
-                        $body_json->result->business_photo = $photo;
-                    }
-
-                    $this->save_reviews($body_json->result, $local_img);
-
-                    $result = array(
-                        'id'      => $body_json->result->place_id,
-                        'name'    => $body_json->result->name,
-                        'photo'   => strlen($body_json->result->business_photo) ? $body_json->result->business_photo : GRW_GOOGLE_BIZ,
-                        'reviews' => $body_json->result->reviews
-                    );
-                    $status = 'success';
-
-                    if ($_POST['feed_id']) {
-                        delete_transient('grw_feed_' . GRW_VERSION . '_' . $_POST['feed_id'] . '_reviews', false);
-                    }
+                if ($_POST['feed_id']) {
+                    delete_transient('grw_feed_' . GRW_VERSION . '_' . $_POST['feed_id'] . '_reviews', false);
                 }
-                $response = compact('status', 'result');
             }
             header('Content-type: text/javascript');
             echo json_encode($response);
             die();
         }
+    }
+
+    function call_google($url, $local_img, $google_api_key) {
+        $res = wp_remote_get($url);
+        $body = wp_remote_retrieve_body($res);
+        $body_json = json_decode($body);
+
+        if (!$body_json || !isset($body_json->result)) {
+            $result = $body_json;
+            $status = 'failed';
+        } elseif (!isset($body_json->result->rating)) {
+            $error_msg = 'Google place <a href="' . $body_json->result->url . '" target="_blank">which you try to connect</a> does not have a rating and reviews, it seems it\'s a street address, not a business locations. Please read manual how to find <a href="' . admin_url('admin.php?page=grw-support&grw_tab=fig#place_id') . '" target="_blank">right Place ID</a>.';
+            $result = array('error_message' => $error_msg);
+            $status = 'failed';
+        } else {
+            if ($google_api_key && strlen($google_api_key) > 0) {
+                $photo = $this->business_avatar($body_json->result, $google_api_key);
+                $body_json->result->business_photo = $photo;
+            }
+
+            $this->save_reviews($body_json->result, $local_img);
+
+            $result = array(
+                'id'      => $body_json->result->place_id,
+                'name'    => $body_json->result->name,
+                'photo'   => strlen($body_json->result->business_photo) ? $body_json->result->business_photo : GRW_GOOGLE_BIZ,
+                'reviews' => $body_json->result->reviews
+            );
+            $status = 'success';
+        }
+        return compact('status', 'result');
     }
 
     function grw_refresh_reviews($args) {

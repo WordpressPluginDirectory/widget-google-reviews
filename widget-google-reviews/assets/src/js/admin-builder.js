@@ -61,7 +61,7 @@ var GRW_HTML_CONTENT = '' +
     '<div class="grw-builder-platforms grw-builder-inside">' +
 
         '<div class="grw-builder-connect grw-connect-google">Google Connection</div>' +
-        '<div id="grw-connect-wizard" style="display:none;">' +
+        '<div id="grw-connect-wizard" title="Google reviews connection" style="display:none;">' +
             '<iframe id="gpidc" src="https://app.richplugins.com/gpidc?authcode={{authcode}}" style="width:100%;height:400px"></iframe>' +
             '<small class="grw-connect-error"></small>' +
         '</div>' +
@@ -285,7 +285,7 @@ function grw_builder_init($, data) {
     } else {
         $('.grw-connect-google').hide();
         $connect_wizard_el.dialog({
-            modal: true,
+            modal: false,
             width: '50%',
             maxWidth: '600px',
             closeOnEscape: false,
@@ -307,6 +307,7 @@ function grw_builder_init($, data) {
                         grw_nonce : jQuery('#grw_nonce').val()
                     }, function(res) {
                         if (res.status == 'success') {
+                            res.result.place_id = data.pid;
                             window.gpidc.contentWindow.postMessage({data: res, action: 'set_place'}, '*');
                         } else {
                             grw_connect_error($, res.result.error_message);
@@ -399,7 +400,7 @@ function grw_feed_save_ajax() {
         if (!window.grw_post_id.value) {
             var post_id = document.querySelector('.wp-gr').getAttribute('data-id');
             window.grw_post_id.value = post_id;
-            window.location.href = window.location.href + '&grw_feed_id=' + post_id + '&grw_feed_new=1';
+            window.location.href = GRW_VARS.builderUrl + '&grw_feed_id=' + post_id + '&grw_feed_new=1';
         } else {
             var $rateus = jQuery('#grw-rate_us');
             if ($rateus.length && !$rateus.hasClass('grw-flash-visible') && !window['grw_rateus']) {
@@ -522,7 +523,7 @@ function grw_connect_error($, error_message, cb) {
     }
 }
 
-function grw_connection_add($, el, conn, authcode, checked) {
+function grw_connection_add($, el, conn, authcode, checked, append) {
 
     var connected_id = grw_connection_id(conn),
         connected_el = $('#' + connected_id);
@@ -537,7 +538,11 @@ function grw_connection_add($, el, conn, authcode, checked) {
         connected_el.innerHTML = grw_connection_render(conn, checked);
 
         var connections_el = $('.grw-connections')[0];
-        connections_el.appendChild(connected_el);
+        if (append) {
+            connections_el.appendChild(connected_el);
+        } else {
+            connections_el.prepend(connected_el);
+        }
 
         jQuery('.grw-toggle', connected_el).unbind('click').click(function () {
             jQuery(this).toggleClass('toggled');
@@ -806,8 +811,9 @@ function grw_deserialize_connections($, el, data) {
         connections = temp_conns;
     }
 
+    let $bp = el.querySelector('.grw-builder-platforms');
     for (var i = 0; i < connections.length; i++) {
-        grw_connection_add($, el.querySelector('.grw-builder-platforms'), connections[i], data.authcode, true);
+        grw_connection_add($, $bp, connections[i], data.authcode, true, true);
     }
 
     for (var opt in options) {

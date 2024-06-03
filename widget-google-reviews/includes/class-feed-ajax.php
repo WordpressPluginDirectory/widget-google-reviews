@@ -22,7 +22,6 @@ class Feed_Ajax {
 
         add_action('wp_ajax_grw_feed_save_ajax', array($this, 'save_ajax'));
         add_action('wp_ajax_grw_get_place', array($this, 'get_place'));
-        add_action('wp_ajax_grw_connect', array($this, 'connect'));
     }
 
     public function save_ajax() {
@@ -60,7 +59,7 @@ class Feed_Ajax {
                 if ($google_api_key && strlen($google_api_key) > 0) {
                     $url = $this->api_url($pid, $google_api_key, $lang);
                 } else {
-                    $url = 'https://app.richplugins.com/gpaw2/get/json?pid=' . $pid . '&token=' . $token .
+                    $url = 'https://app.richplugins.com/gpaw2/place/json?pid=' . $pid . '&token=' . $token .
                            '&siteurl=' . get_option('siteurl') . '&authcode=' . get_option('grw_auth_code');
 
                     if ($lang && strlen($lang) > 0) {
@@ -83,85 +82,12 @@ class Feed_Ajax {
                     $result = array('error_message' => $error_msg);
                     $status = 'failed';
                 } else {
+                    if ($google_api_key && strlen($google_api_key) > 0) {
+                        $photo = $this->business_avatar($body_json->result, $google_api_key);
+                        $body_json->result->business_photo = $photo;
+                    }
                     $result = $body_json->result;
                     $status = 'success';
-                }
-                $response = compact('status', 'result');
-            }
-            header('Content-type: text/json');
-            echo json_encode($response);
-            wp_die();
-        }
-    }
-
-    public function connect() {
-        if (current_user_can('manage_options')) {
-            if (isset($_POST['grw_nonce']) === false) {
-                $error = __('Unable to call request. Make sure you are accessing this page from the Wordpress dashboard.', 'widget-google-reviews');
-                $response = compact('error');
-            } else {
-                check_admin_referer('grw_wpnonce', 'grw_nonce');
-
-                $pid = sanitize_text_field(wp_unslash($_POST['pid']));
-                $lang = sanitize_text_field(wp_unslash($_POST['lang']));
-                $token = sanitize_text_field(wp_unslash($_POST['token']));
-
-                $google_api_key = get_option('grw_google_api_key');
-
-                if ($google_api_key && strlen($google_api_key) > 0) {
-                    $url = $this->api_url($pid, $google_api_key, $lang);
-                } else {
-                    $url = 'https://app.richplugins.com/gpaw2/get/json?pid=' . $pid . '&token=' . $token .
-                           '&siteurl=' . get_option('siteurl') . '&authcode=' . get_option('grw_auth_code');
-
-                    if ($lang && strlen($lang) > 0) {
-                        $url = $url . '&lang=' . $lang;
-                    }
-                }
-
-                $res = wp_remote_get($url);
-                $body = wp_remote_retrieve_body($res);
-                $body_json = json_decode($body);
-
-                if (!$body_json || !isset($body_json->result)) {
-                    $result = $body_json;
-                    $status = 'failed';
-                } elseif (!isset($body_json->result->rating)) {
-                    $error_msg = 'Google place <a href="' . $body_json->result->url . '" target="_blank">which you try to connect</a> ' .
-                                 'does not have a rating and reviews, it seems it\'s a street address, not a business locations. ' .
-                                 'Please read manual how to find ' .
-                                 '<a href="' . admin_url('admin.php?page=grw-support&grw_tab=fig#place_id') . '" target="_blank">right Place ID</a>.';
-                    $result = array('error_message' => $error_msg);
-                    $status = 'failed';
-                } else {
-                    $this->connect_google->save_reviews($body_json->result, false);
-                    $content = json_encode([
-                        'connections' => [
-                            [
-                                'id'        => $body_json->result->place_id,
-                                'name'      => $body_json->result->name,
-                                'photo'     => strlen($body_json->result->business_photo) ? $body_json->result->business_photo : GRW_GOOGLE_BIZ,
-                                'lang'      => $lang,
-                                'refresh'   => true,
-                                'local_img' => false,
-                                'platform'  => 'google'
-
-                            ]
-                        ],
-                        'options'     => [
-                            'view_mode' => 'slider'
-                        ]
-                    ]);
-
-                    $post_id = $this->feed_serializer->save(null, $body_json->result->name, $content);
-                    if (isset($post_id)) {
-                        $status = 'success';
-                        $result = array('feed_id' => $post_id);
-                    }
-
-                    /*if ($_POST['feed_id']) {
-                        delete_transient('grw_feed_' . GRW_VERSION . '_' . $_POST['feed_id'] . '_reviews', false);
-                    }*/
                 }
                 $response = compact('status', 'result');
             }
@@ -180,6 +106,43 @@ class Feed_Ajax {
             $url = $url . '&reviews_sort=' . $reviews_sort;
         }
         return $url;
+    }
+
+    function business_avatar($response_result_json, $google_api_key) {
+        if (isset($response_result_json->photos)) {
+            $url = add_query_arg(
+                array(
+                    'photoreference' => $response_result_json->photos[0]->photo_reference,
+                    'key'            => $google_api_key,
+                    'maxwidth'       => '300',
+                    'maxheight'      => '300',
+                ),
+                'https://maps.googleapis.com/maps/api/place/photo'
+            );
+            return $url; //$this->upload_image($url, $response_result_json->place_id);
+        }
+        return null;
+    }
+
+    function upload_image($url, $name) {
+        $res = wp_remote_get($url, array('timeout' => 8));
+
+        if(is_wp_error($res)) {
+            // LOG
+            return null;
+        }
+
+        $bits = wp_remote_retrieve_body($res);
+        $filename = $name . '.jpg';
+
+        $upload_dir = wp_upload_dir();
+        $full_filepath = $upload_dir['path'] . '/' . $filename;
+        if (file_exists($full_filepath)) {
+            wp_delete_file($full_filepath);
+        }
+
+        $upload = wp_upload_bits($filename, null, $bits);
+        return $upload['url'];
     }
 
 }

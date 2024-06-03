@@ -118,7 +118,7 @@ final class Plugin {
             $plugin_settings = new Plugin_Settings($feed_deserializer, $builder_page, $debug_info);
             $plugin_settings->register();
 
-            $plugin_support = new Plugin_Support();
+            $plugin_support = new Plugin_Support($debug_info);
             $plugin_support->register();
 
             $admin_rev = new Admin_Rev();

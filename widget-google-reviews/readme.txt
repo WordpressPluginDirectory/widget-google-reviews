@@ -4,7 +4,7 @@ Donate link: https://richplugins.com/business-reviews-bundle-wordpress-plugin
 Tags: Google reviews, reviews, slider, testimonials, Google business
 Requires at least: 3.0.1
 Tested up to: 6.5
-Stable tag: 3.8
+Stable tag: 3.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ This plugin displays **Google Business Reviews** on your WordPress website throu
 
 Displaying **Google Rating** and Reviews on your site is the easiest and most effective way to increase your customer confidence and, as a result, increase sales!
 
-By the way, with the <a href="https://richplugins.com/business-reviews-bundle-wordpress-plugin">Business version</a> of this plugin, you can get better results, because it shows all reviews, auto syncs these, supports other platforms like Facebook, Yelp which you can mix and has many other great features!
+By the way, with the <a href="https://richplugins.com/business-reviews-bundle-wordpress-plugin">Business version</a>, you can get better results, because it shows all reviews with a constantly auto synced, works absolutely without Google API key (not necessary enable billing), supports other platforms like Facebook, Yelp which you can mix and has many other cool features to grow your customer trust and sales!
 
 [youtube https://www.youtube.com/watch?v=11JAfRta1iA]
 
@@ -101,12 +101,20 @@ To find out more about who we are and what we do, here are some useful links:
 == Roadmap ==
 
 * Test-feature: weekly reviews auto-updates
-* Remove unused ajax grw_connect listener
-* Put new connected Google place to the top connections list (at the moment it's added to the end)
-* Trying to get 10 reviews with own Google API key instead of 5 most-helpful by default
-* Fix incorrect redirecting after initial page connecting
+* Get 10 reviews with own Google API key reviews refreshing
 
 == Changelog ==
+
+= 3.9 =
+* Improve: connect Google reviews by PID (Place ID), not only search term
+* Improve: search Google place by non UTF-8 symbold (like ü)
+* Improve: remove unused ajax grw_connect listener
+* Improve: reduce fields for set_place query
+* Improve: put new connected Google place to the top of connections list
+* Improve: trying to get 10 reviews with own Google API key connection
+* Improve: debug information moved to Support menu
+* Bugfix: incorrect redirect after initial Google reviews connecting
+* Bugfix: initial Google reviews connecting dialog not modal
 
 = 3.8 =
 * Update Google connection method

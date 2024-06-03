@@ -69,7 +69,7 @@ class Builder_Page {
         }
 
         ?>
-        <div class="grw-builder">
+        <div class="grw-builder"<?php if (!$feed_inited) { ?> style="filter:blur(4px)"<?php } ?>>
             <?php wp_nonce_field('grw_wpnonce', 'grw_nonce'); ?>
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php?action=' . Post_Types::FEED_POST_TYPE . '_save')); ?>">
                 <input type="hidden" id="grw_post_id" name="<?php echo Post_Types::FEED_POST_TYPE; ?>[post_id]" value="<?php echo esc_attr($feed_id); ?>">

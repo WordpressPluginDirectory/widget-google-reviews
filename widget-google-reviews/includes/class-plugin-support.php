@@ -4,7 +4,10 @@ namespace WP_Rplg_Google_Reviews\Includes;
 
 class Plugin_Support {
 
-    public function __construct() {
+    private $debug_info;
+
+    public function __construct($debug_info) {
+        $this->debug_info = $debug_info;
     }
 
     public function register() {
@@ -38,6 +41,9 @@ class Plugin_Support {
                     </a>
                     <a href="#support" class="nav-tab<?php if ($tab == 'support') { ?> nav-tab-active<?php } ?>">
                         <?php echo __('Support', 'widget-google-reviews'); ?>
+                    </a>
+                    <a href="#advance" class="nav-tab<?php if ($tab == 'advance') { ?> nav-tab-active<?php } ?>">
+                        <?php echo __('Advance Options', 'widget-google-reviews'); ?>
                     </a>
                 </div>
 
@@ -78,6 +84,11 @@ class Plugin_Support {
                 <div id="support" class="tab-content" style="display:<?php echo $tab == 'support' ? 'block' : 'none'?>;">
                     <h3>Most Common Questions</h3>
                     <?php include_once(dirname(GRW_PLUGIN_FILE) . '/includes/page-setting-support.php'); ?>
+                </div>
+
+                <div id="advance" class="tab-content" style="display:<?php echo $tab == 'advance' ? 'block' : 'none'?>;">
+                    <h3>Advance Options</h3>
+                    <?php include_once(dirname(GRW_PLUGIN_FILE) . '/includes/page-setting-advance.php'); ?>
                 </div>
 
             </div>
