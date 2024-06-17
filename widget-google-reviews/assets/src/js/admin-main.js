@@ -31,8 +31,8 @@ jQuery(document).ready(function($) {
                         console.log(res);
                     }
                 });
-                var askUrl = (Math.random() * 1).toFixed(0) > 0 ?
-                    'https://g.page/r/CZac_S7-Dh2NEBM/review' :
+                var askUrl = /*(Math.random() * 1).toFixed(0) > 0 ?
+                    'https://g.page/r/CZac_S7-Dh2NEBM/review' :*/
                     'https://wordpress.org/support/plugin/widget-google-reviews/reviews/?rate=' + rate + '#new-post';
                 window.open(askUrl, '_blank');
                 grw_rateus_close();

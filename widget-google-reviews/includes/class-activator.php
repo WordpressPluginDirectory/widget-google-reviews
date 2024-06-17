@@ -29,6 +29,8 @@ class Activator {
             'grw_revupd_cron_timeout',
             'grw_revupd_cron_log',
             'grw_debug_refresh',
+            'grw_notice_msg',
+            'grw_notice_type',
             'grw_rev_notice_hide',
             'rplg_rev_notice_show',
             'grw_rate_us',

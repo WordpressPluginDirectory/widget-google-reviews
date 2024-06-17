@@ -23,6 +23,8 @@ class Plugin_Support {
 
         $tab = isset($_GET['grw_tab']) && strlen($_GET['grw_tab']) > 0 ? sanitize_text_field(wp_unslash($_GET['grw_tab'])) : 'welcome';
 
+        $grw_google_api_key  = get_option('grw_google_api_key');
+
         ?>
         <div class="grw-page-title">
             Support and Troubleshooting
@@ -89,6 +91,20 @@ class Plugin_Support {
                 <div id="advance" class="tab-content" style="display:<?php echo $tab == 'advance' ? 'block' : 'none'?>;">
                     <h3>Advance Options</h3>
                     <?php include_once(dirname(GRW_PLUGIN_FILE) . '/includes/page-setting-advance.php'); ?>
+                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php?action=grw_settings_save&grw_tab=advance')); ?>">
+                        <?php wp_nonce_field('grw-wpnonce_save', 'grw-form_nonce_save'); ?>
+                        <div class="grw-field">
+                            <div class="grw-field-label">
+                                <label>Google Places API key</label>
+                            </div>
+                            <div class="wp-review-field-option">
+                                <input type="text" id="grw_google_api_key" name="grw_google_api_key" class="regular-text" value="<?php echo esc_attr($grw_google_api_key); ?>">
+                                <div style="padding-top:15px">
+                                    <input type="submit" value="Save" name="save" class="button" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
             </div>

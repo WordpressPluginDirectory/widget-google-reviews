@@ -44,20 +44,30 @@ class Settings_Save {
         }
 
         if (isset($_POST['save'])) {
+            $notice_code = 'settings_save';
             $fields = array('grw_async_css', 'grw_demand_assets', 'grw_minified_assets', 'grw_google_api_key');
             foreach ($fields as $field) {
 
                 if (isset($_POST[$field])) {
-                    $value = $_POST[$field];
-                    update_option($field, trim(sanitize_text_field(wp_unslash($value))));
+                    $value = trim(sanitize_text_field(wp_unslash($_POST[$field])));
+                    update_option($field, $value);
 
                     // If save Google API key automatically enable a reviews update cron
                     if ($field == 'grw_google_api_key' && strlen($value) > 0) {
                         update_option('grw_revupd_cron', '1');
+
+                        // Test Google API key
+                        $res = wp_remote_get('https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJ3TH9CwFZwokRIvNO1SP0WLg&key=' . $value);
+                        $body = wp_remote_retrieve_body($res);
+                        $body_json = json_decode($body);
+                        if (!$body_json || $body_json->error_message) {
+                            update_option('grw_notice_msg', $body_json ? $body_json->error_message : 'Test Google API key request failed');
+                            update_option('grw_notice_type', 'error');
+                            $notice_code = 'custom_msg';
+                        }
                     }
                 }
             }
-            $notice_code = 'settings_save';
         }
 
         if (isset($_POST['create_db'])) {

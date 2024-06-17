@@ -115,7 +115,7 @@ class Builder_Page {
             <div id="grw-rate_us">
                 <div class="grw-rate_us-content">
                     <div class="grw-rate_us-head">
-                        How's experience with RichPlugins?
+                        How's RichPlugins so far?
                     </div>
                     <div class="grw-rate_us-body">
                         Rate us clicking on the stars:

@@ -1,4 +1,4 @@
-<p>To correctly use this plugin you need to get two things - <b><u>Google Place ID</u></b> and <b><u>Google Places API key</u></b>. These are two different values, please do not confuse them.</p>
+<p>To correctly use this plugin you need to know two things - <b><u>Google Place ID</u></b> and <b><u>Google Places API key</u></b>. These are two different values, please do not confuse them.</p>
 
 <p style="background: #eee; padding: 4px 10px; border-radius: 4px; border: 1px solid #ccc; font-size: 16px; font-weight: 600; text-align: center; line-height: 32px; color: #304cd3;">There is nothing complicated and the whole process will not take even 5 minutes,<br>and as a reward you receive a constantly updated and collected Google Rating and Reviews!</p>
 
@@ -7,14 +7,14 @@
 <h3 id="place_id"><u>I. Google Place ID</u></h3>
 
 <p><b>First of all, you need to find Google Place ID:</b> this is the identification of your Google Place (business). It should be like that: <b>ChIJ..</b>, for instance: ChIJ3TH9CwFZwokRIvNO1SP0WLg. If you know it, go to <a href="#fig_api_key">How to create Google API key</a></p>
-<p><b>Please keep in mind: your Google Place must have a physical address</b>, because Google Place API, which is used in this plugin, works only with a phisical Google places, it's not possible to connect area or virtual place. Unfortunately, it's a limitation of Google, not specifically the plugin.</p>
+<p style="background: #eee; padding: 2px 6px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px;"><b>Please keep in mind: your Google Place must have a physical address</b>, because Google Place API, which is used in this plugin, works only with a phisical Google places, it's not possible to connect area or virtual place. Unfortunately, it's a limitation of Google, not specifically the plugin.</p>
 <p>The standard way to find your Google Place ID is to go to <a href="https://developers.google.com/places/place-id" target="_blank">https://developers.google.com/places/place-id</a> and search for your company name. But sometimes it just doesn’t work.</p>
 
-<h3 class="subheader">How To Find Any Google Place ID…</h3>
+<h3 class="subheader">How To Find Any Google Place ID</h3>
 
 <div class="grw-flex-row">
     <div class="grw-flex-col3">
-        <b>1</b> Search for your business on Google.
+        <b>1</b> Find your business in Google (you should see preview, rating and reviews like on the demo right screenshot)
     </div>
     <div class="grw-flex-col7">
         <div class="box-img"><img src="<?php echo GRW_ASSETS_URL . 'img/google_placeid_1.png'; ?>"></div>
@@ -23,7 +23,7 @@
 
 <div class="grw-flex-row">
     <div class="grw-flex-col3">
-        <b>2</b> Inspect the “<b>Write a Review</b>” button. To do this in Firefox, right-click and choose “<b>Inspect Element</b>“. In Chrome, right-click and choose “<b>Inspect</b>“. (Most browsers follow a similar process.)
+        <b>2</b> Open page source: right-click and choose “<b>View page source</b>”
     </div>
     <div class="grw-flex-col7">
         <div class="box-img"><img src="<?php echo GRW_ASSETS_URL . 'img/google_placeid_2.png'; ?>"></div>
@@ -32,16 +32,10 @@
 
 <div class="grw-flex-row">
     <div class="grw-flex-col3">
-        <b>3</b> Find “<b>data-pid</b>” as shown above. (This part is a little tricky, but just look inside the <b>&lt;a&gt;</b> tag until you find <b>data-pid=</b>).
+        <b>3</b> Find “<b>data-place-id</b>” on the page source and copy the characters within the quotes (as shown on the screenshot). You now have your Google Places ID. Paste this in the search field to connect the reviews
     </div>
     <div class="grw-flex-col7">
         <div class="box-img"><img src="<?php echo GRW_ASSETS_URL . 'img/google_placeid_3.png'; ?>"></div>
-    </div>
-</div>
-
-<div class="grw-flex-row">
-    <div class="grw-flex-col3">
-        <b>4</b> Copy the characters within the quotes (as shown above). You now have your google Places ID.  Paste this somewhere you can easily find it.
     </div>
 </div>
 
@@ -51,7 +45,7 @@
 
 <div class="grw-flex-row">
     <div class="grw-flex-col">
-        <b>1</b> Go to your <a href="https://console.developers.google.com/apis/dashboard?pli=1" target="_blank">Google Console</a> dashboard. If you new user agree Google terms:
+        <b>1</b> Go to your <a href="https://console.developers.google.com/apis/dashboard?pli=1" target="_blank">Google Cloud Console</a> dashboard. If you new user agree Google terms:
     </div>
     <div class="grw-flex-col">
         <div class="box-img"><img src="<?php echo GRW_ASSETS_URL . 'img/google_key_1.png'; ?>"></div>
