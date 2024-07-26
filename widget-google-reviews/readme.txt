@@ -3,8 +3,8 @@ Contributors: richplugins
 Donate link: https://richplugins.com/business-reviews-bundle-wordpress-plugin
 Tags: Google reviews, reviews, slider, testimonials, Google business
 Requires at least: 3.0.1
-Tested up to: 6.5
-Stable tag: 4.0
+Tested up to: 6.6
+Stable tag: 4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,11 @@ To find out more about who we are and what we do, here are some useful links:
 * Get 10 reviews with own Google API key reviews refreshing
 
 == Changelog ==
+
+= 4.1 =
+* Improve: description & manuals
+* Bugfix: Undefined property $error_message in class-settings-save.php(63)
+* Update to WordPress 6.6
 
 = 4.0 =
 * Improve: added field for Google API key on the Support menu

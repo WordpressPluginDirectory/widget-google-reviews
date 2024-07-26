@@ -7,7 +7,7 @@
 <h3 id="place_id"><u>I. Google Place ID</u></h3>
 
 <p><b>First of all, you need to find Google Place ID:</b> this is the identification of your Google Place (business). It should be like that: <b>ChIJ..</b>, for instance: ChIJ3TH9CwFZwokRIvNO1SP0WLg. If you know it, go to <a href="#fig_api_key">How to create Google API key</a></p>
-<p style="background: #eee; padding: 2px 6px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px;"><b>Please keep in mind: your Google Place must have a physical address</b>, because Google Place API, which is used in this plugin, works only with a phisical Google places, it's not possible to connect area or virtual place. Unfortunately, it's a limitation of Google, not specifically the plugin.</p>
+<p style="background: #eee; padding: 2px 6px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px;"><b>Please keep in mind: your Google Place must have a physical address</b>, because Google Place API, which is used in this plugin, works only with physical Google places, it's not possible to connect an area or virtual place. Unfortunately, it's a limitation of Google, not specifically the plugin.</p>
 <p>The standard way to find your Google Place ID is to go to <a href="https://developers.google.com/places/place-id" target="_blank">https://developers.google.com/places/place-id</a> and search for your company name. But sometimes it just doesn’t work.</p>
 
 <h3 class="subheader">How To Find Any Google Place ID</h3>

@@ -60,7 +60,7 @@ class Settings_Save {
                         $res = wp_remote_get('https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJ3TH9CwFZwokRIvNO1SP0WLg&key=' . $value);
                         $body = wp_remote_retrieve_body($res);
                         $body_json = json_decode($body);
-                        if (!$body_json || $body_json->error_message) {
+                        if (!$body_json || isset($body_json->error_message)) {
                             update_option('grw_notice_msg', $body_json ? $body_json->error_message : 'Test Google API key request failed');
                             update_option('grw_notice_type', 'error');
                             $notice_code = 'custom_msg';
