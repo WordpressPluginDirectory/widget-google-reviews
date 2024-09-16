@@ -19,6 +19,7 @@ class Admin_Notice {
         'settings_update_db'     => 'Database updated successfully.',
         'settings_revupd_cron_0' => 'Reviews update daily schedule disabled successfully.',
         'settings_revupd_cron_1' => 'Reviews update daily schedule enabled successfully.',
+        'settings_del_dup_revs'  => 'Duplicate reviews removed',
     );
 
     public function register() {

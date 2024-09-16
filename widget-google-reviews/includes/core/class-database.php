@@ -49,6 +49,7 @@ class Database {
                "profile_photo_url VARCHAR(255),".
                "hide VARCHAR(1) DEFAULT '' NOT NULL,".
                "PRIMARY KEY (`id`),".
+               "UNIQUE INDEX grp_author_url_lang (`author_url`, `language`),".
                "INDEX grp_google_place_id (`google_place_id`)".
                ") " . $charset_collate . ";";
 

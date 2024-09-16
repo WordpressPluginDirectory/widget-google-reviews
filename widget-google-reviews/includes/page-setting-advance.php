@@ -43,6 +43,25 @@ $grw_debug_mode = get_option('grw_debug_mode') == '1';
             <p><label><input type="checkbox" id="reset_all_multisite" name="reset_all_multisite"> For all sites (WP Multisite)</label></p>
         </div>
     </div>
+    <div class="grw-field">
+        <div class="grw-field-label">
+            <label>Remove duplicate reviews</label>
+        </div>
+        <div class="wp-review-field-option">
+            <?php wp_nonce_field('grw-wpnonce_del_dup_revs', 'grw-form_nonce_del_dup_revs'); ?>
+            <input type="submit" name="del_dup_revs" value="Remove duplicate reviews" class="button" />
+        </div>
+    </div>
+    <div class="grw-field">
+        <div class="grw-field-label">
+            <label>Execute db update manually</label>
+        </div>
+        <div class="wp-review-field-option">
+            <?php wp_nonce_field('grw-wpnonce_update_db', 'grw-form_nonce_update_db'); ?>
+            <input type="submit" name="update_db" class="button" />
+            <input type="text" name="update_db_ver" style="width:94px;height:22px" placeholder="version" />
+        </div>
+    </div>
     <div id="debug_info" class="grw-field">
         <div class="grw-field-label">
             <label>Debug information</label>
@@ -60,16 +79,6 @@ $grw_debug_mode = get_option('grw_debug_mode') == '1';
         <div class="wp-review-field-option">
             <?php wp_nonce_field('grw-wpnonce_debug_mode', 'grw-form_nonce_debug_mode'); ?>
             <input type="submit" name="debug_mode" class="button" value="<?php echo $grw_debug_mode ? 'Disable' : 'Enable'; ?>" />
-        </div>
-    </div>
-    <div class="grw-field">
-        <div class="grw-field-label">
-            <label>Execute db update manually</label>
-        </div>
-        <div class="wp-review-field-option">
-            <?php wp_nonce_field('grw-wpnonce_update_db', 'grw-form_nonce_update_db'); ?>
-            <input type="submit" name="update_db" class="button" />
-            <input type="text" name="update_db_ver" style="width:94px;height:22px" placeholder="version" />
         </div>
     </div>
 </form>

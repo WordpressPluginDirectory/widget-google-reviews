@@ -32,6 +32,7 @@ class Activator {
             'grw_notice_msg',
             'grw_notice_type',
             'grw_rev_notice_hide',
+            'grw_last_error',
             'rplg_rev_notice_show',
             'grw_rate_us',
         );
@@ -167,6 +168,14 @@ class Activator {
                     "INDEX grp_google_place_id (`google_place_id`)".
                     ") " . $wpdb->get_charset_collate() . ";";
                 dbDelta($sql);
+
+            //case version_compare($last_active_version, '4.2', '<'):
+                //$this->delete_duplicates();
+                //$wpdb->query("ALTER TABLE `" . $wpdb->prefix . Database::REVIEW_TABLE . "` ADD UNIQUE `grp_author_url_lang` (`author_url`, `language`)");
+        }
+
+        if (!empty($wpdb->last_error)) {
+            update_option('grw_last_error', time() . ': ' . $wpdb->last_error);
         }
     }
 
@@ -295,6 +304,40 @@ class Activator {
             foreach ($grw_posts as $grw_post) {
                 wp_delete_post($grw_post, true);
             }
+        }
+    }
+
+    public function delete_duplicates() {
+        global $wpdb;
+
+        $last_error = array();
+
+        // Delete duplicte reviews
+        $wpdb->query($wpdb->prepare(
+            "DELETE `" . $wpdb->prefix . Database::REVIEW_TABLE . "` " .
+            "FROM `" . $wpdb->prefix . Database::REVIEW_TABLE . "` INNER JOIN (" .
+                "SELECT MIN(id) AS last_id, author_url, language FROM `" . $wpdb->prefix . Database::REVIEW_TABLE . "` " .
+                "WHERE author_url IN (" .
+                    "SELECT author_url FROM `" . $wpdb->prefix . Database::REVIEW_TABLE . "` " .
+                    "GROUP BY author_url, language HAVING COUNT(*) > 1" .
+                ") GROUP BY author_url, language" .
+            ") DUPLIC ON DUPLIC.author_url = `" . $wpdb->prefix . Database::REVIEW_TABLE . "`.author_url " .
+                    "AND DUPLIC.language = `" . $wpdb->prefix . Database::REVIEW_TABLE . "`.language " .
+            "WHERE `" . $wpdb->prefix . Database::REVIEW_TABLE . "`.ID > DUPLIC.last_id;"));
+
+        if (!empty($wpdb->last_error)) {
+            array_push($last_error, $wpdb->last_error);
+        }
+
+        // Add unique index for author_url and lang
+        $wpdb->query("ALTER TABLE `" . $wpdb->prefix . Database::REVIEW_TABLE . "` ADD UNIQUE `grp_author_url_lang` (`author_url`, `language`)");
+
+        if (!empty($wpdb->last_error)) {
+            array_push($last_error, $wpdb->last_error);
+        }
+
+        if (count($last_error) > 0) {
+            update_option('grw_last_error', time() . ': ' . implode("; ", $last_error));
         }
     }
 

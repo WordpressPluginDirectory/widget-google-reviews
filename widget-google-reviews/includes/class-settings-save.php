@@ -108,6 +108,11 @@ class Settings_Save {
             }
         }
 
+        if (isset($_POST['del_dup_revs'])) {
+            $this->activator->delete_duplicates();
+            $notice_code = 'settings_del_dup_revs';
+        }
+
         if (isset($_POST['revupd_cron'])) {
             $revupd_cron = $_POST['revupd_cron'] == 'Enable' ? '1' : '0';
             if ($revupd_cron == '0') {
@@ -151,7 +156,7 @@ class Settings_Save {
     }
 
     private function check_nonce() {
-        $nonce_actions = array('active', 'save', 'create_db', 'reset', 'reset_all', 'debug_mode', 'update_db');
+        $nonce_actions = array('active', 'save', 'create_db', 'reset', 'reset_all', 'debug_mode', 'update_db', 'del_dup_revs');
         $nonce_form_prefix = 'grw-form_nonce_';
         $nonce_action_prefix = 'grw-wpnonce_';
         foreach ($nonce_actions as $key => $value) {

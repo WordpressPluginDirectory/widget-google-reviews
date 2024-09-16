@@ -332,7 +332,7 @@
 #grw-rate_us-wrap {
     display: block;
     position: fixed;
-    left: 0;
+    right: 0;
     top: 100%;
     width: auto;
     font-size: 16px;

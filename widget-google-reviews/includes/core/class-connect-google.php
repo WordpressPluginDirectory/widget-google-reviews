@@ -265,12 +265,13 @@ class Connect_Google {
                 if (isset($review->author_url) && strlen($review->author_url) > 0) {
                     $where = " WHERE author_url = %s";
                     $where_params = array($review->author_url);
-                } elseif (isset($review->author_name) && strlen($review->author_name) > 0) {
-                    $where = " WHERE author_name = %s";
-                    $where_params = array($review->author_name);
                 } else {
                     $where = " WHERE time = %s";
                     $where_params = array($review->time);
+                    if (isset($review->author_name) && strlen($review->author_name) > 0) {
+                        $where = $where . " AND author_name = %s";
+                        array_push($where_params, $review->author_name);
+                    }
                 }
 
                 $review_lang = null;

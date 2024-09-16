@@ -1,20 +1,20 @@
 === Plugin for Google Reviews ===
 Contributors: richplugins
 Donate link: https://richplugins.com/business-reviews-bundle-wordpress-plugin
-Tags: Google reviews, reviews, slider, testimonials, Google business
+Tags: google, google places reviews, reviews, slider, google rating
 Requires at least: 3.0.1
 Tested up to: 6.6
-Stable tag: 4.1
+Stable tag: 4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Official way to show Google Reviews on WordPress without Google crawling and other unofficial methods. Boost user trust and sales with this plugin!
+Display up to 10 Google reviews on your site in less than a minute and continue collecting new reviews without limits to increase trust and sales!
 
 == Description ==
 
-This plugin displays **Google Business Reviews** on your WordPress website through a public and approved by Google API without crawling and other unofficial methods. With this plugin, you can be sure of the right way for showing **Google Reviews**.
+This plugin displays **Google Business Reviews** on your WordPress website through a public and approved by Google API without crawling and other unofficial methods. With this plugin, you can be sure of the right way for showing up to 10 **Google Reviews** instantly and continue collecting new reviews without limits with your own Google API key.
 
-Displaying **Google Rating** and Reviews on your site is the easiest and most effective way to increase your customer confidence and, as a result, increase sales!
+Display **Google Rating** and Reviews on your site in less than a minute. This is the easiest and most effective way to increase your customer confidence and, as a result, increase sales!
 
 By the way, with the <a href="https://richplugins.com/business-reviews-bundle-wordpress-plugin">Business version</a>, you can get better results, because it shows all reviews with a constantly auto synced, works absolutely without Google API key (not necessary enable billing), supports other platforms like Facebook, Yelp which you can mix and has many other cool features to grow your customer trust and sales!
 
@@ -104,6 +104,13 @@ To find out more about who we are and what we do, here are some useful links:
 * Get 10 reviews with own Google API key reviews refreshing
 
 == Changelog ==
+
+= 4.2 =
+* Improve: added new layout Rating
+* Improve: author URL is unique to avoid duplicate reviews
+* Improve: added service button to remove duplicate reviews
+* Improve: plugin's description
+* Bugfix: document.referrer empty with protected Referrer-Policy header
 
 = 4.1 =
 * Improve: description & manuals

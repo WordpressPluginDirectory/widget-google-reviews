@@ -78,6 +78,7 @@ var GRW_HTML_CONTENT = '' +
                     '<option value="slider" selected="selected">Slider</option>' +
                     '<option value="grid">Grid</option>' +
                     '<option value="list">List</option>' +
+                    '<option value="rating">Rating</option>' +
                 '</select>' +
             '</div>' +
 

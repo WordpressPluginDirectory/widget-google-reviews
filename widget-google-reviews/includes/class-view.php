@@ -44,6 +44,9 @@ class View {
             case 'list':
                 $this->render_list($businesses, $reviews, $options, $is_admin);
                 break;
+            case 'rating':
+                $this->render_rating($businesses, $reviews, $options);
+                break;
             case 'badge':
                 $this->render_badge($businesses, $reviews, $options);
                 break;
@@ -177,6 +180,24 @@ class View {
             if (!$options->hide_reviews) { ?>
             <div class="wp-google-content-inner">
                 <?php $this->grw_place_reviews($reviews, $options, $is_admin); ?>
+            </div>
+            <?php } ?>
+        </div>
+        <?php $this->js_loader('grw_init');
+    }
+
+    private function render_rating($businesses, $reviews, $options, $is_admin = false) {
+        ?>
+        <div class="wp-google-list">
+            <?php foreach ($businesses as $business) { ?>
+            <div class="wp-google-place<?php if ($options->header_center) { ?> wp-place-center<?php } ?>">
+            <?php $this->grw_place(
+                $business->rating,
+                $business,
+                $business->photo,
+                $reviews,
+                $options
+            ); ?>
             </div>
             <?php } ?>
         </div>

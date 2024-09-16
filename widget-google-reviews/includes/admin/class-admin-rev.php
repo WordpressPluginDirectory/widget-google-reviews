@@ -54,12 +54,11 @@ class Admin_Rev {
                               '</a>' .
                           '</p>' .
                           '<p style="color:#999;font-size:12px;">' .
-                              'By the way, if you have been thinking about upgrading to the ' .
-                              '<a href="https://richplugins.com/business-reviews-bundle-wordpress-plugin?promo=GRGROW23" target="_blank">Business</a> ' .
-                              'version, here is a 30% off onboard coupon ->  <b>GRGROW23</b>' .
+                              'By the way, if you have been thinking about upgrading to the Business version, ' .
+                              'you can do it today <a href="https://richplugins.com/business-reviews-bundle-wordpress-plugin?promo=GRGROW24" target="_blank"><b><u>WITH A HUGE 35% OFF DISCOUNT</u></b></a>.' .
                           '</p>';
 
-                printf('<div class="%1$s" style="position:fixed;top:50px;right:20px;padding-right:30px;z-index:2;margin-left:20px">%2$s</div>', esc_attr($class), $notice);
+                printf('<div class="%1$s" style="position:fixed;bottom:50px;right:20px;padding-right:30px;z-index:2;margin-left:20px">%2$s</div>', esc_attr($class), $notice);
             } else {
                 update_option('rplg_rev_notice_show', '');
             }
