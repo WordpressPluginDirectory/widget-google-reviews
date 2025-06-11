@@ -4,6 +4,8 @@ namespace WP_Rplg_Google_Reviews\Includes;
 
 class View {
 
+    const G_AVA_SIZE = 's120';
+
     public function render($feed_id, $businesses, $reviews, $options, $is_admin = false) {
         ob_start();
 
@@ -125,9 +127,9 @@ class View {
 
     private function render_grid($businesses, $reviews, $options, $is_admin = false) {
         if (count($businesses) > 0) { ?>
-        <div class="grw-header">
+        <div class="grw-header<?php if ($options->header_center) { ?> wp-place-center<?php } ?>">
             <div class="grw-header-inner">
-                <div class="wp-google-place<?php if ($options->header_center) { ?> wp-place-center<?php } ?>">
+                <div class="wp-google-place">
                 <?php $this->grw_place(
                     $businesses[0]->rating,
                     $businesses[0],
@@ -371,8 +373,8 @@ class View {
                     $author_avatar = $default_avatar;
                 }
                 if (isset($options->reviewer_avatar_size)) {
-                    $author_avatar = str_replace('s128', 's' . $options->reviewer_avatar_size, $author_avatar);
-                    $default_avatar = str_replace('s128', 's' . $options->reviewer_avatar_size, $default_avatar);
+                    $author_avatar = str_replace(self::G_AVA_SIZE, 's' . $options->reviewer_avatar_size, $author_avatar);
+                    $default_avatar = str_replace(self::G_AVA_SIZE, 's' . $options->reviewer_avatar_size, $default_avatar);
                 }
                 $this->grw_image($author_avatar, '', $options->lazy_load_img, $default_avatar);
                 ?>
@@ -394,7 +396,7 @@ class View {
                 <div class="wp-google-time" data-time="<?php echo $review->time; ?>"><?php echo gmdate("H:i d M y", $review->time); ?></div>
                 <div class="wp-google-feedback">
                     <span class="wp-google-stars"><?php echo $this->grw_stars($review->rating); ?></span>
-                    <span class="wp-google-text" tabindex="0"><?php echo $review->text; ?></span>
+                    <span class="wp-google-text"><?php echo $review->text; ?></span>
                 </div>
                 <?php if ($is_admin) {
                     echo '<a href="#" class="wp-review-hide" data-id=' . $review->id . '>' . ($review->hide == '' ? 'Hide' : 'Show') . ' review</a>';
@@ -408,9 +410,8 @@ class View {
         $addcls = $options->hide_backgnd ? "" : " grw-backgnd";
         $addcls .= $options->show_round ? " grw-round" : "";
         $addcls .= $options->show_shadow ? " grw-shadow" : "";
-        $addcls .= $is_admin && $review->hide != '' ? " wp-review-hidden" : "";
         ?>
-        <div class="grw-review<?php if ($hr) { echo ' grw-hide'; } ?>">
+        <div class="grw-review<?php if ($hr) { echo ' grw-hide'; } ?><?php if ($is_admin && $review->hide != '') { echo ' wp-review-hidden'; } ?>">
             <div class="grw-review-inner<?php echo $addcls; ?>">
                 <div class="wp-google-left">
                     <?php
@@ -422,8 +423,8 @@ class View {
                         $author_avatar = $default_avatar;
                     }
                     if (isset($options->reviewer_avatar_size)) {
-                        $author_avatar = str_replace('s128', 's' . $options->reviewer_avatar_size, $author_avatar);
-                        $default_avatar = str_replace('s128', 's' . $options->reviewer_avatar_size, $default_avatar);
+                        $author_avatar = str_replace(self::G_AVA_SIZE, 's' . $options->reviewer_avatar_size, $author_avatar);
+                        $default_avatar = str_replace(self::G_AVA_SIZE, 's' . $options->reviewer_avatar_size, $default_avatar);
                     }
                     $this->grw_image($author_avatar, '', $options->lazy_load_img, $default_avatar);
 
@@ -445,14 +446,14 @@ class View {
                 <div class="wp-google-wrap">
                     <div class="wp-google-feedback grw-scroll" <?php if (strlen($options->slider_text_height) > 0) {?> style="height:<?php echo $options->slider_text_height; ?>!important"<?php } ?>>
                         <?php if (strlen($review->text) > 0) { ?>
-                        <span class="wp-google-text" tabindex="0"><?php echo $review->text; ?></span>
+                        <span class="wp-google-text"><?php echo $review->text; ?></span>
                         <?php } ?>
                     </div><?php
                     if (isset($options->media) && $options->media && isset($review->images) && strlen($review->images) > 0) {
                     ?><div class="wp-google-img"><?php
                         $images = explode(';', $review->images);
                         foreach ($images as $img) {
-                            ?><div onclick="rpi.Utils.popup('<?php echo $img; ?>', 620, 500)"><img src="<?php echo $img; ?>" loading="lazy"></div><?php
+                            ?><img class="rpi-thumb" src="<?php echo preg_replace('/(=.*)s\d{2,3}/', '$1s50', $img); ?>" onclick="rpi.Utils.popup(this.src.replace('=s50', '=s500'), 620, 500)" alt="" loading="lazy"><?php
                         }
                     ?></div><?php
                     }
@@ -460,7 +461,7 @@ class View {
                 if (isset($options->reply) && $options->reply && isset($review->reply) && strlen($review->reply) > 0) {
                 ?><div class="wp-google-reply grw-scroll">
                     <div>
-                        <span class="grw-b">Response from the owner</span>
+                        <span class="grw-b"><?php echo __('Response from the owner', 'widget-google-reviews'); ?></span>
                         <span class="wp-google-time" data-time="<?php echo $review->reply_time; ?>">
                             <?php echo gmdate("H:i d M y", $review->reply_time); ?>
                         </span>
@@ -479,17 +480,35 @@ class View {
 
     function grw_stars($rating) {
         ?><span class="wp-stars"><?php
-        foreach (array(1,2,3,4,5) as $val) {
-            $score = $rating - $val;
-            if ($score >= 0) {
-                ?><span class="wp-star"><svg width="17" height="17" viewBox="0 0 1792 1792" role="none"><path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#fb8e28"></path></svg></span><?php
-            } else if ($score > -1 && $score < 0) {
-                ?><span class="wp-star"><svg width="17" height="17" viewBox="0 0 1792 1792" role="none"><path d="M1250 957l257-250-356-52-66-10-30-60-159-322v963l59 31 318 168-60-355-12-66zm452-262l-363 354 86 500q5 33-6 51.5t-34 18.5q-17 0-40-12l-449-236-449 236q-23 12-40 12-23 0-34-18.5t-6-51.5l86-500-364-354q-32-32-23-59.5t54-34.5l502-73 225-455q20-41 49-41 28 0 49 41l225 455 502 73q45 7 54 34.5t-24 59.5z" fill="#fb8e28"></path></svg></span><?php
+        for ($i = 0; $i < 5; $i++) {
+            $score = $rating - $i;
+            if ($score <= 0) {
+                $this->star_o();
+            } elseif ($score > 0 && $score < 1) {
+                if ($score < 0.25) {
+                    $this->star_o();
+                } elseif ($score > 0.75) {
+                    $this->star();
+                } else {
+                    $this->star_h();
+                }
             } else {
-                ?><span class="wp-star"><svg width="17" height="17" viewBox="0 0 1792 1792" role="none"><path d="M1201 1004l306-297-422-62-189-382-189 382-422 62 306 297-73 421 378-199 377 199zm527-357q0 22-26 48l-363 354 86 500q1 7 1 20 0 50-41 50-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#ccc"></path></svg></span><?php
+                $this->star();
             }
         }
         ?></span><?php
+    }
+
+    function star() {
+        ?><span class="wp-star"><svg width="17" height="17" viewBox="0 0 1792 1792" role="none"><path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#fb8e28"></path></svg></span><?php
+    }
+
+    function star_h() {
+        ?><span class="wp-star"><svg width="17" height="17" viewBox="0 0 1792 1792" role="none"><path d="M1250 957l257-250-356-52-66-10-30-60-159-322v963l59 31 318 168-60-355-12-66zm452-262l-363 354 86 500q5 33-6 51.5t-34 18.5q-17 0-40-12l-449-236-449 236q-23 12-40 12-23 0-34-18.5t-6-51.5l86-500-364-354q-32-32-23-59.5t54-34.5l502-73 225-455q20-41 49-41 28 0 49 41l225 455 502 73q45 7 54 34.5t-24 59.5z" fill="#fb8e28"></path></svg></span><?php
+    }
+
+    function star_o() {
+        ?><span class="wp-star"><svg width="17" height="17" viewBox="0 0 1792 1792" role="none"><path d="M1201 1004l306-297-422-62-189-382-189 382-422 62 306 297-73 421 378-199 377 199zm527-357q0 22-26 48l-363 354 86 500q1 7 1 20 0 50-41 50-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="#ccc"></path></svg></span><?php
     }
 
     function grw_anchor($url, $class, $text, $options, $aria_label = '', $onclick = '') {
