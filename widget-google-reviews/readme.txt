@@ -1,10 +1,10 @@
-=== Widgets for Google Reviews ===
+=== Rich Shortcodes for Google Reviews ===
 Contributors: widgetpack
 Tags: google, reviews, google reviews, google places reviews, rating
 Requires at least: 3.0.1
 Requires PHP: 7.2
 Tested up to: 6.8
-Stable tag: 6.4
+Stable tag: 6.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,12 +70,24 @@ Email support in English is also available on weekdays: support@richplugins.com
 
 == Roadmap ==
 
-= 6.5 =
 * New feature: minimal rating layout (rating, stars and total reviews)
 * New feature: possibility to hide (or delete) the connected place to exclude from Overview page
 * Improve: adapt review connection modal for mobile devices
+* Improve: New option Style Options / Review photos max lines
 
 == Changelog ==
+
+= 6.5 =
+* Improve: Updated Google reviews connection wizard for improved stability
+* Improve: Combined reviews from multiple connected places, sorted by most recent
+* Improve: Slider auto-scrolling stops when slider is out of the browser viewport
+* Improve: Option to hide reviews per widget instead of globally
+* Bugfix: Fixed max height for review photos
+
+= 6.4.1 =
+* Improve: Ask map URL for reviews update if missing
+* Improve: Updated plugin name
+* Improve: Updated translations
 
 = 6.4 =
 * Improve: Show IP address on the Settings page for API key restriction
