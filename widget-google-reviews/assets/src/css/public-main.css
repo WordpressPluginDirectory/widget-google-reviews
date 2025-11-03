@@ -876,7 +876,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--media-gap);
-    max-height: calc(var(--media-size) * var(--media-lines) + var(--media-gap) * var(--media-lines) - 2px) !important;
+    max-height: calc((var(--media-size) + var(--media-gap)) * var(--media-lines) - 2px) !important;
     overflow-y: auto !important;
 }
 

@@ -53,7 +53,7 @@ class Plugin_Overview {
                     <option value="36">3 years</option>
                     <option value="60">5 years</option>
                 </select>
-                <select id="grw-overview-places"></select>
+                <select id="grw-overview-places" style="max-width:256px"></select>
             </div>
 
             <div class="grw-flex-row">

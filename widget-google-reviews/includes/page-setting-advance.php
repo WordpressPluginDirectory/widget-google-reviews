@@ -6,7 +6,7 @@ $grw_debug_mode = get_option('grw_debug_mode') == '1';
 
     <div class="grw-field">
         <div class="grw-field-label">
-            <label>Reviews update daily schedule is <b><?php echo $grw_revupd_cron ? 'enabled' : 'disabled' ?></b></label>
+            <label>Reviews update schedule is <b><?php echo $grw_revupd_cron ? 'enabled' : 'disabled' ?></b></label>
         </div>
         <div class="wp-review-field-option">
             <?php wp_nonce_field('grw-wpnonce_revupd_cron', 'grw-form_nonce_revupd_cron'); ?>

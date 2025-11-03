@@ -4,7 +4,7 @@ Tags: google, reviews, google reviews, google places reviews, rating
 Requires at least: 3.0.1
 Requires PHP: 7.2
 Tested up to: 6.8
-Stable tag: 6.5
+Stable tag: 6.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,15 @@ Email support in English is also available on weekdays: support@richplugins.com
 * Improve: New option Style Options / Review photos max lines
 
 == Changelog ==
+
+= 6.6.1 =
+* Bugfix: Fixed PHP variable bug from previous release
+
+= 6.6 =
+* Improve: Added clear and easy-to-use steps to the Google connection wizard
+* Improve: Added alt attributes for all images when ARIA labels are disabled
+* Improve: Switched to a better style (CSS) obfuscator
+* Some style fixes
 
 = 6.5 =
 * Improve: Updated Google reviews connection wizard for improved stability

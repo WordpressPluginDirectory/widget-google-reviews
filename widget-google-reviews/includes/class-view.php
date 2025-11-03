@@ -34,7 +34,7 @@ class View {
 
         ?>
         <div class="wp-gr wpac<?php if ($options->dark_theme) { ?> wp-dark<?php } ?>"<?php if ($style) { ?> style="<?php echo $style;?>"<?php } ?> data-id="<?php echo $feed_id; ?>" data-layout="<?php echo $options->view_mode; ?>" data-exec="false" data-options='<?php echo $this->options($options); ?>'>
-        <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display:none!important">
             <symbol id="grw-star" viewBox="0 0 1792 1792">
                 <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z"></path>
             </symbol>
@@ -296,49 +296,48 @@ class View {
 
     function grw_place($rating, $place, $place_img, $reviews, $options, $show_powered = true, $show_writereview = false) {
         if (!$options->header_hide_photo) {
-            $img_alt = $options->header_hide_name ? $place->name : ''; ?>
-        <div class="wp-google-left">
-            <img src="<?php echo $place_img; ?>" alt="<?php echo $img_alt; ?>" width="50" height="50">
-        </div>
-        <?php } ?>
-        <div class="wp-google-right">
-            <?php if (!$options->header_hide_name) { ?>
-            <div class="wp-google-name">
-                <?php $place_name_content = '<span>' . $place->name . '</span>';
-                echo $this->grw_anchor($place->url, '', $place_name_content, $options, sprintf(__('%s place profile', 'widget-google-reviews'), $place->name)); ?>
-            </div><?php
+            $alt_val = sprintf(__('%s place picture', 'widget-google-reviews'), $place->name);
+            $alt = empty($options->aria_label) ? $alt_val : ($options->header_hide_name ? $alt_val : '');
+        ?><div class="wp-google-left">
+            <img src="<?php echo $place_img; ?>" alt="<?php echo $alt; ?>" width="50" height="50">
+        </div><?php
+        }
+        ?><div class="wp-google-right"><?php
+            if (!$options->header_hide_name) {
+            ?><div class="wp-google-name"><?php
+                $place_name_content = '<span>' . $place->name . '</span>';
+                echo $this->grw_anchor($place->url, '', $place_name_content, $options, sprintf(__('%s place profile', 'widget-google-reviews'), $place->name));
+            ?></div><?php
             }
             $this->grw_place_rating($rating, $place->review_count, $options);
             if ($show_powered) {
                 $this->grw_powered();
             }
-            if (!$options->hide_writereview) { ?>
-            <div class="wp-google-wr">
-                <?php echo $this->grw_anchor(
+            if (!$options->hide_writereview) {
+            ?><div class="wp-google-wr"><?php
+                echo $this->grw_anchor(
                     'https://search.google.com/local/writereview?placeid=' . $place->id,
                     '',
                     __('review us on', 'widget-google-reviews') . '<svg height="18" width="18" role="none"><use href="#grw-google"></use></svg>',
                     $options,
                     __('review us on Google', 'widget-google-reviews'),
                     'return rplg_leave_review_window.call(this)'
-                ); ?>
-            </div>
-            <?php } ?>
-        </div>
-        <?php
+                );
+            ?></div><?php
+            }
+        ?></div><?php
     }
 
     function grw_place_rating($rating, $review_count, $opts) {
         $aria_label = isset($opts->aria_label) && $opts->aria_label ?
             ' aria-label="' . sprintf(__('Rating: %s out of 5', 'widget-google-reviews'), $rating) . '"' : '';
-        ?>
-        <div>
+        ?><div>
             <span class="wp-google-rating"<?php echo $aria_label; ?>><?php echo $rating; ?></span>
             <span class="wp-google-stars"><?php $this->grw_stars($rating); ?></span>
-        </div>
-        <?php if (!$opts->hide_based_on && isset($review_count)) { ?>
-        <div class="wp-google-based"><?php echo vsprintf(__('Based on %s reviews', 'widget-google-reviews'), $this->grw_array($review_count)); ?></div>
-        <?php }
+        </div><?php
+        if (!$opts->hide_based_on && isset($review_count)) {
+        ?><div class="wp-google-based"><?php echo vsprintf(__('Based on %s reviews', 'widget-google-reviews'), $this->grw_array($review_count)); ?></div><?php
+        }
     }
 
     function grw_powered() {
@@ -346,9 +345,7 @@ class View {
     }
 
     function grw_place_reviews($reviews, $options, $is_admin = false) {
-        ?>
-        <div class="wp-google-reviews">
-        <?php
+        ?><div class="wp-google-reviews"><?php
         $place_id = null;
         $place_url = null;
 
@@ -366,13 +363,11 @@ class View {
                 $this->grw_place_review($review, $hr, $options, $is_admin);
             }
         }
-        ?>
-        </div>
-        <?php if ($options->pagination > 0 && $hr) { ?>
-        <a class="wp-google-url" href="#" onclick="return rplg_next_reviews.call(this, 'wp-google', <?php echo $options->pagination; ?>);">
-            <?php echo __('More reviews', 'widget-google-reviews'); ?>
-        </a>
-        <?php
+        ?></div><?php
+        if ($options->pagination > 0 && $hr) {
+        ?><a class="wp-google-url" href="#" onclick="return rplg_next_reviews.call(this, 'wp-google', <?php echo $options->pagination; ?>);"><?php
+            echo __('More reviews', 'widget-google-reviews');
+        ?></a><?php
         } else {
             $reviews_link = $options->google_def_rev_link ? $place_url : 'https://search.google.com/local/reviews?placeid=' . $place_id;
             $this->grw_anchor($reviews_link, 'wp-google-url', __('See All Reviews', 'widget-google-reviews'), $options, __('All reviews', 'widget-google-reviews'));
@@ -395,20 +390,18 @@ class View {
                     $author_avatar = str_replace(self::G_AVA_SIZE, 's' . $options->reviewer_avatar_size, $author_avatar);
                     $default_avatar = str_replace(self::G_AVA_SIZE, 's' . $options->reviewer_avatar_size, $default_avatar);
                 }
-                $this->grw_image($author_avatar, '', $options->lazy_load_img, $default_avatar);
+                $author_name = empty($review->author_name) ? __('Google User', 'widget-google-reviews') : $review->author_name;
+                $alt = empty($options->aria_label) ? sprintf(__('%s profile picture', 'widget-google-reviews'), $author_name) : '';
+                $this->grw_image($author_avatar, $alt, $options->lazy_load_img, $default_avatar);
                 ?>
             </div>
             <?php } ?>
             <div class="wp-google-right">
                 <?php
                 if (strlen($review->author_url) > 0) {
-                    $this->grw_anchor($review->author_url, 'wp-google-name', $review->author_name, $options, sprintf(__('%s user profile', 'widget-google-reviews'), $review->author_name));
+                    $aria_label = sprintf(__('%s user profile', 'widget-google-reviews'), $author_name);
+                    $this->grw_anchor($review->author_url, 'wp-google-name', $author_name, $options, $aria_label);
                 } else {
-                    if (strlen($review->author_name) > 0) {
-                        $author_name = $review->author_name;
-                    } else {
-                        $author_name = __('Google User', 'widget-google-reviews');
-                    }
                     ?><div class="wp-google-name"><?php echo $author_name; ?></div><?php
                 }
                 ?>
@@ -433,8 +426,7 @@ class View {
         $inr_cls .= $options->show_shadow ? " grw-shadow" : "";
         ?><div class="grw-review<?php echo $cls; ?>">
             <div class="grw-review-inner<?php echo $inr_cls; ?>">
-                <div class="wp-google-left">
-                    <?php
+                <div class="wp-google-left"><?php
                     // Google reviewer avatar
                     $default_avatar = GRW_ASSETS_URL . 'img/guest.png';
                     if (strlen($review->author_avatar) > 0) {
@@ -446,22 +438,19 @@ class View {
                         $author_avatar = str_replace(self::G_AVA_SIZE, 's' . $options->reviewer_avatar_size, $author_avatar);
                         $default_avatar = str_replace(self::G_AVA_SIZE, 's' . $options->reviewer_avatar_size, $default_avatar);
                     }
-                    $this->grw_image($author_avatar, '', $options->lazy_load_img, $default_avatar);
+                    $author_name = empty($review->author_name) ? __('Google User', 'widget-google-reviews') : $review->author_name;
+                    $alt = empty($options->aria_label) ? sprintf(__('%s profile picture', 'widget-google-reviews'), $author_name) : '';
+                    $this->grw_image($author_avatar, $alt, $options->lazy_load_img, $default_avatar);
 
                     // Google reviewer name
                     if (!empty($review->author_url) || !empty($review->url)) {
                         $url = empty($review->author_url) ? $review->url : $review->author_url;
-                        $this->grw_anchor($url, 'wp-google-name', $review->author_name, $options, sprintf(__('%s user profile', 'widget-google-reviews'), $review->author_name));
+                        $aria_label = sprintf(__('%s user profile', 'widget-google-reviews'), $author_name);
+                        $this->grw_anchor($url, 'wp-google-name', $author_name, $options, $aria_label);
                     } else {
-                        if (strlen($review->author_name) > 0) {
-                            $author_name = $review->author_name;
-                        } else {
-                            $author_name = __('Google User', 'widget-google-reviews');
-                        }
                         ?><div class="wp-google-name"><?php echo $author_name; ?></div><?php
                     }
-                    ?>
-                    <div class="wp-google-time" data-time="<?php echo $review->time; ?>"><?php echo gmdate("H:i d M y", $review->time); ?></div>
+                    ?><div class="wp-google-time" data-time="<?php echo $review->time; ?>"><?php echo gmdate("H:i d M y", $review->time); ?></div>
                 </div>
                 <div class="wp-google-stars"><?php echo $this->grw_stars($review->rating); ?></div>
                 <div class="wp-google-wrap">
@@ -474,7 +463,8 @@ class View {
                     ?><div class="wp-google-img"><?php
                         $images = explode(';', $review->images);
                         foreach ($images as $img) {
-                            ?><img class="rpi-thumb" src="<?php echo preg_replace('/(=.*)s\d{2,3}/', '$1s50', $img); ?>" alt="" loading="lazy"><?php
+                            $thumb_alt = __('Photo from customer review', 'widget-google-reviews');
+                            ?><img class="rpi-thumb" src="<?php echo preg_replace('/(=.*)s\d{2,3}/', '$1s50', $img); ?>" alt="<?php echo $thumb_alt; ?>" loading="lazy"><?php
                         }
                     ?></div><?php
                     }
@@ -486,9 +476,9 @@ class View {
                         <span class="wp-google-time" data-time="<?php echo $review->reply_time; ?>">
                             <?php echo gmdate("H:i d M y", $review->reply_time); ?>
                         </span>
-                    </div>
-                    <?php echo $review->reply; ?>
-                </div><?php
+                    </div><?php
+                    echo $review->reply;
+                ?></div><?php
                 }
                 if ($is_admin) {
                     echo '<a href="#" class="wp-review-hide" data-id=' . $review->id . '>' . ($review->hide == '' ? 'hide' : 'show') . ' review</a>';
@@ -545,7 +535,7 @@ class View {
     }
 
     function grw_aria_label($options, $aria_label = '') {
-        return isset($options->aria_label) && $options->aria_label && !empty($aria_label) ?
+        return !empty($options->aria_label) && !empty($aria_label) ?
             ' role="link" aria-label="' . $aria_label . ' - ' . __('opens in a new window', 'widget-google-reviews') . '"' : '';
     }
 
@@ -554,7 +544,7 @@ class View {
     }
 
     function js_loader($func, $data = '') {
-        ?><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" onload="(function(el, data) {var f = function() { window.<?php echo $func; ?> ? <?php echo $func; ?>(el, data) : setTimeout(f, 400) }; f() })(this<?php if (strlen($data) > 0) { ?>, <?php echo str_replace('"', '\'', $data); } ?>);" width="1" height="1" style="display:none"><?php
+        ?><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" role="presentation" aria-hidden="true" onload="(function(el, data) {var f = function() { window.<?php echo $func; ?> ? <?php echo $func; ?>(el, data) : setTimeout(f, 400) }; f() })(this<?php if (strlen($data) > 0) { ?>, <?php echo str_replace('"', '\'', $data); } ?>);" width="1" height="1" style="display:none!important"><?php
     }
 
     function grw_array($params=null) {
