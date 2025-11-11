@@ -40,6 +40,7 @@ class Plugin_Settings {
         $grw_enabled         = get_option('grw_active') == '1';
         $async_css           = get_option('grw_async_css');
         $grw_demand_assets   = get_option('grw_demand_assets');
+        $grw_rucss_safelist  = get_option('grw_rucss_safelist');
         $grw_freq_revs_upd   = get_option('grw_freq_revs_upd');
         $gpa_old             = get_option('grw_gpa_old');
         $grw_google_api_key  = get_option('grw_google_api_key');
@@ -95,6 +96,19 @@ class Plugin_Settings {
                                     <input type="hidden" name="grw_demand_assets" value="false">
                                     <input type="checkbox" id="grw_demand_assets" name="grw_demand_assets" value="true" <?php checked('true', $grw_demand_assets); ?>>
                                     Load static assets (JS/CSS) only on pages where reviews are showing
+                                </label>
+                            </div>
+                        </div>
+                        <div class="grw-field">
+                            <div class="grw-field-label">
+                                <label>Disable RUCSS safelist</label>
+                            </div>
+                            <div class="wp-review-field-option">
+                                <label>
+                                    <input type="hidden" name="grw_rucss_safelist" value="false">
+                                    <input type="checkbox" id="grw_rucss_safelist" name="grw_rucss_safelist" value="true" <?php checked('true', $grw_rucss_safelist); ?>>
+                                    Disables automatic addition of the main CSS file to the safelist<br>
+                                    to prevent possible style issues with optimization plugins such as NitroPack or WP Rocket
                                 </label>
                                 <div style="padding-top:15px">
                                     <input type="submit" value="Save" name="save" class="button" />

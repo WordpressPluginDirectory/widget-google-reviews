@@ -58,7 +58,11 @@ class Assets {
                 add_filter('style_loader_tag', array($this, 'style_async'), 10, 2);
             }
         }
-        add_filter('get_rocket_option_remove_unused_css_safelist', array($this, 'rucss_safelist'));
+
+        $grw_rucss_safelist = get_option('grw_rucss_safelist');
+        if (!$grw_rucss_safelist || $grw_rucss_safelist != 'true') {
+            add_filter('get_rocket_option_remove_unused_css_safelist', array($this, 'rucss_safelist'));
+        }
     }
 
     function script_async($tag, $handle) {
