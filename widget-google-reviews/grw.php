@@ -2,8 +2,8 @@
 /*
 Plugin Name: Rich Shortcodes for Google Reviews
 Plugin URI: https://wordpress.org/plugins/widget-google-reviews/
-Description: Instantly Google Places Reviews on your website to increase user confidence and sales.
-Version: 6.7
+Description: Instantly display Google Map reviews on your website to increase user confidence and sales.
+Version: 6.9
 Author: RichPlugins <support@richplugins.com>
 Author URI: https://richplugins.com
 Text Domain: widget-google-reviews
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 
 require(ABSPATH . 'wp-includes/version.php');
 
-define('GRW_VERSION'              , '6.7');
+define('GRW_VERSION'              , '6.9');
 define('GRW_PLUGIN_FILE'          , __FILE__);
 define('GRW_PLUGIN_PATH'          , plugin_dir_path(GRW_PLUGIN_FILE));
 define('GRW_PLUGIN_URL'           , plugins_url(basename(GRW_PLUGIN_PATH), basename(__FILE__)));

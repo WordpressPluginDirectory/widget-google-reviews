@@ -171,29 +171,50 @@ class Core {
         if ($place) {
 
             // Get reviews
-            $reviews_params = [$place->id];
-
-            $reviews_where = $is_admin ? '' : ' AND hide = \'\'';
+            $hidden_ids  = [];
+            $where_plain = $is_admin ? '' : " AND hide = ''";
+            $where_r     = $is_admin ? '' : " AND r.hide = ''";
 
             if (isset($options->hidden) && !$is_admin) {
                 $hidden_ids = $this->parse_hidden_ids($options->hidden);
                 if (!empty($hidden_ids)) {
-                    $hidden_phs     = implode(',', array_fill(0, count($hidden_ids), '%d'));
-                    $reviews_where .= ' AND id NOT IN (' . $hidden_phs . ')';
-                    $reviews_params = array_merge($reviews_params, $hidden_ids);
+                    $hidden_phs   = implode(',', array_fill(0, count($hidden_ids), '%d'));
+                    $where_plain .= ' AND id NOT IN (' . $hidden_phs . ')';
+                    $where_r     .= ' AND r.id NOT IN (' . $hidden_phs . ')';
                 }
             }
 
-            $reviews_lang = empty($biz->lang) ? 'en' : $biz->lang;
-            $reviews_where .= ' AND (language = %s OR language = \'\' OR language IS NULL)';
-            $reviews_params[] = $reviews_lang;
+            if (empty($biz->lang)) {
 
-            $reviews = $wpdb->get_results(
-                $wpdb->prepare(
-                    "SELECT * FROM " . $wpdb->prefix . Database::REVIEW_TABLE .
-                    " WHERE google_place_id = %d" . $reviews_where . " ORDER BY time DESC", $reviews_params
-                )
-            );
+                $sql = "SELECT r.*
+                        FROM {$wpdb->prefix}" . Database::REVIEW_TABLE . " r
+                        INNER JOIN (
+                            SELECT author_url, MAX(time) AS max_time
+                            FROM {$wpdb->prefix}" . Database::REVIEW_TABLE . "
+                            WHERE google_place_id = %d{$where_plain}
+                            GROUP BY author_url
+                        ) t
+                            ON t.author_url = r.author_url
+                           AND t.max_time = r.time
+                        WHERE r.google_place_id = %d{$where_r}
+                        ORDER BY r.time DESC, r.id DESC";
+
+                $params = array_merge([$place->id], $hidden_ids, [$place->id], $hidden_ids);
+
+            } else {
+
+                $where_plain .= " AND language = %s";
+
+                $sql = "SELECT *
+                        FROM {$wpdb->prefix}" . Database::REVIEW_TABLE . "
+                        WHERE google_place_id = %d{$where_plain}
+                        ORDER BY time DESC";
+
+                $params = array_merge([$place->id], $hidden_ids);
+                $params[] = $biz->lang;
+            }
+
+            $reviews = $wpdb->get_results($wpdb->prepare($sql, $params));
 
             // Setup photo
             $place->photo = strlen($biz->photo) > 0 ? $biz->photo : (strlen($place->photo) > 0 ? $place->photo : GRW_GOOGLE_BIZ);
@@ -327,7 +348,7 @@ class Core {
                     'id'            => $rev->id,
                     'hide'          => $rev->hide,
                     'rating'        => $rev->rating,
-                    'text'          => wp_encode_emoji($rev->text),
+                    'text'          => $rev->text,
                     'author_url'    => $rev->author_url,
                     'author_name'   => $rev->author_name,
                     'time'          => $rev->time,

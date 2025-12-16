@@ -221,7 +221,7 @@ jQuery(document).ready(function($) {
                     $rating.html(
                         '<div class="wp-gr">' +
                             '<div class="grw-overview-h">' + place.name + '</div>' +
-                            '<div>' +
+                            '<div class="grw-flex">' +
                                 '<span class="wp-google-rating">' + res.rating + '</span>' +
                                 '<span class="wp-google-stars">' + grw_stars(res.rating, '#fb8e28', 20) + '</span>' +
                             '</div>' +
@@ -239,21 +239,26 @@ jQuery(document).ready(function($) {
                     /*
                      * Render reviews
                      */
-                    var list = '',
-                        common = rpi.Common($reviews[0], {text_size: 50}, {
-                            time     : 'wp-google-time',
-                            text     : 'wp-google-text',
-                            readmore : 'wp-more-toggle'
-                        });
+                    const root = document.createElement('div');
+                    const list = document.createElement('div');
 
-                    $.each(res.reviews, function(i, review) {
-                        list += grw_review(review);
+                    const common = rpi.Common($reviews[0], {text_size: 50}, {
+                        time     : 'wp-google-time',
+                        text     : 'wp-google-text',
+                        readmore : 'wp-more-toggle'
                     });
-                    $reviews.html(
-                        '<div class="wp-gr wpac">' +
-                            '<div class="wp-google-reviews">' + list + '</div>' +
-                        '</div>'
-                    );
+
+                    list.className = 'wp-google-reviews';
+                    $.each(res.reviews, function(i, review) {
+                        list.appendChild(grw_review(review));
+                    });
+
+                    root.className = 'wp-gr wpac';
+                    root.appendChild(list);
+
+                    $reviews.html('');
+                    $reviews[0].appendChild(root);
+
                     common.init();
 
                     $('.wp-review-hide', $reviews).unbind('click').click(function() {
@@ -466,18 +471,66 @@ function grw_star(prefix, color, size) {
 }
 
 function grw_review(review) {
-    return '' +
-    '<div class="wp-google-review' + (review.hide == '' ? '' : ' wp-review-hidden') + '">' +
-        '<div class="wp-google-right">' +
-            '<a href="' + review.author_url + '" class="wp-google-name" target="_blank" rel="nofollow noopener">' + review.author_name + '</a>' +
-            '<div class="wp-google-time" data-time="' + review.time + '"></div>' +
-            '<div class="wp-google-feedback">' +
-                '<span class="wp-google-stars">' + grw_stars(review.rating, '#fb8e28', 16) + '</span>' +
-                '<span class="wp-google-text">' + review.text + '</span>' +
-            '</div>' +
-            '<a href="#" class="wp-review-hide" data-id="' + review.id + '">' + (review.hide == '' ? 'Hide' : 'Show') + ' review</a>' +
-        '</div>' +
-    '</div>';
+    const slg = 'wp-google';
+
+    const root = document.createElement('div');
+    root.className = slg + '-review' + (review.hide === '' ? '' : ' wp-review-hidden');
+    root.dataset.rev = String(review.provider || '');
+
+    const right = document.createElement('div');
+    right.className = slg + '-right';
+    root.appendChild(right);
+
+    const lnk = document.createElement('a');
+    lnk.className = slg + '-name';
+    lnk.target = '_blank';
+    lnk.rel = 'nofollow noopener';
+    lnk.href = grw_safeUrl(review.author_url);
+    lnk.textContent = review.author_name || '';
+    right.appendChild(lnk);
+
+    const time = document.createElement('div');
+    time.className = slg + '-time';
+    time.dataset.time = String(review.time || '');
+    right.appendChild(time);
+
+    const feedback = document.createElement('div');
+    feedback.className = slg + '-feedback';
+    right.appendChild(feedback);
+
+    const stars = grw_stars(review.rating, '#fb8e28', 16);
+    if (typeof stars === 'string') {
+        const swrap = document.createElement('span');
+        swrap.className = 'wp-google-stars';
+        swrap.innerHTML = stars;
+        feedback.appendChild(swrap);
+    } else if (stars instanceof Node) {
+        feedback.appendChild(stars);
+    }
+
+    const text = document.createElement('span');
+    text.className = slg + '-text';
+    text.textContent = review.text;
+    text.innerHTML = text.innerHTML.replace(/\n/g, '<br>');
+    feedback.appendChild(text);
+
+    const toggle = document.createElement('a');
+    toggle.href = '#';
+    toggle.className = 'wp-review-hide';
+    toggle.dataset.id = String(review.id || '');
+    toggle.textContent = (review.hide === '' ? 'Hide' : 'Show') + ' review';
+    right.appendChild(toggle);
+
+    return root;
+}
+
+function grw_safeUrl(url) {
+    if (!url) return '#';
+    url = String(url).trim();
+    if (/^https?:\/\//i.test(url)) {
+        return url;
+    }
+    return '#';
 }
 
 function grw_s2dmy(s) {

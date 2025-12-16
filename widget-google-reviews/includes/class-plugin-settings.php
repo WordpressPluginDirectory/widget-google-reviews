@@ -143,7 +143,8 @@ class Plugin_Settings {
                                 <label>
                                     <input type="hidden" name="grw_gpa_old" value="false">
                                     <input type="checkbox" id="grw_gpa_old" name="grw_gpa_old" value="true" <?php checked('true', $gpa_old); ?>>
-                                    Applies to API keys created before March 1, 2025,<br>provided that the Places API (New) has not been enabled in Google Console.
+                                    It can display more reviews because it sorts them from newest to oldest.<br>
+                                    However, not all API keys support this (you can check it in Google Cloud Console).
                                 </label>
                             </div>
                         </div>

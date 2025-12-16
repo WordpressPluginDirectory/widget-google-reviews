@@ -1,6 +1,7 @@
 <?php
 $grw_revupd_cron = get_option('grw_revupd_cron') == '1';
 $grw_debug_mode = get_option('grw_debug_mode') == '1';
+$dm_disp = $grw_debug_mode ? 'flex' : 'none';
 ?>
 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php?action=grw_settings_save&grw_tab=advance')); ?>">
 
@@ -72,7 +73,7 @@ $grw_debug_mode = get_option('grw_debug_mode') == '1';
             <p id="grw_debug_msg"></p>
         </div>
     </div>
-    <div class="grw-field" style="display:none">
+    <div class="grw-field" style="display:<?php echo $dm_disp; ?>">
         <div class="grw-field-label">
             <label>Debug mode is currently <b><?php echo $grw_debug_mode ? 'enabled' : 'disabled' ?></b></label>
         </div>

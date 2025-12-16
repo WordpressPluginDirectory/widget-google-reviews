@@ -61,6 +61,11 @@
     color: #d63638;
 }
 
+.grw-flex {
+    display: flex;
+    align-items: center;
+}
+
 /*-------------------------------- Top Header --------------------------------*/
 .grw-tophead {
     -ms-flex-align: center;
@@ -505,6 +510,10 @@
 
 #grw-overview-rating .wp-star svg {
     vertical-align: middle;
+}
+
+#grw-overview-rating .wp-google-rating {
+    font-weight: 700!important;
 }
 
 .grw-overview-h {

@@ -1,10 +1,10 @@
 === Rich Shortcodes for Google Reviews ===
 Contributors: widgetpack
-Tags: google reviews, google places reviews, business reviews, widget, slider
-Requires at least: 3.0.1
+Tags: google reviews, google map reviews, reviews, google places reviews, testimonials
+Requires at least: 4.7
 Requires PHP: 7.2
-Tested up to: 6.8
-Stable tag: 6.7
+Tested up to: 6.9
+Stable tag: 6.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,27 @@ Email support in English is also available on weekdays: support@richplugins.com
 * Improve: New option Style Options / Review photos max lines
 
 == Changelog ==
+
+= 6.9 =
+* Display reviews for all connected languages
+* Removed old and unusable style options (max width and height)
+* Fixed "Style Options / Reset to default style" link
+* Fixed oversized slider buttons
+* UI and style enhancements
+
+= 6.8.2 =
+* Updated API connection endpoint
+* Improved settings description
+
+= 6.8.1 =
+* Security fixes for Overview page
+* Minor style improvements
+
+= 6.8 =
+* Added prev, next and dots slider button elements
+* Removed unused service pixel image
+* Tested up to WordPress 6.9
+* Minor style fixes
 
 = 6.7 =
 * Improve: Option added to disable automatic adding of styles file to RUCSS safelist

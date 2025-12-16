@@ -372,7 +372,7 @@
 
 .wp-gr.wpac .wp-google-name a {
     color: var(--head-name-color, #333333)!important;
-    font-size: 100%!important;
+    font-size: 16px!important;
     text-decoration: none!important
 }
 
@@ -559,12 +559,12 @@
 .wp-gr .grw-review-inner {
     position: relative!important;
     /*margin: 0 10px!important;*/
-    padding: 15px!important;
+    padding: 16px!important;
     width: 100%!important;
 }
 
 .wp-gr .grw-review-inner.grw-round {
-    border-radius: 4px!important
+    border-radius: 8px!important
 }
 
 .wp-gr .grw-review-inner.grw-shadow {
@@ -575,8 +575,8 @@
     position: absolute!important;
     top: 10px!important;
     right: 10px!important;
-    width: 18px!important;
-    height: 18px!important;
+    width: 16px!important;
+    height: 16px!important;
 }
 
 .wp-gr .grw-reviews {
@@ -607,6 +607,11 @@
     top: 50%!important;
     width: 100%!important;
 }*/
+
+.wp-gr button {
+    all: unset!important;
+    user-select: none!important;
+}
 
 .wp-gr .grw-btns {
     /*position: absolute!important;*/
@@ -816,11 +821,11 @@
 }
 .wp-gr .rpi-dot.active {
     opacity: 1!important;
-    transform: scale(1.1)!important;
+    transform: scale(1)!important;
     background-color: var(--slider-act-dot-color, #154fc1)!important;
 }
 .wp-gr .rpi-dot.s2 {
-    transform: scale(.9)!important;
+    transform: scale(.85)!important;
 }
 .wp-gr .rpi-dot.s3 {
     transform: scale(.75)!important;

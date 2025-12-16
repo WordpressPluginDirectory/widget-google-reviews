@@ -61,7 +61,7 @@ const GRW_HTML_CONTENT =
     '<div class="grw-builder-platforms grw-builder-inside">' +
 
         '<div class="grw-builder-connect grw-connect-google">Connect Google</div>' +
-        '<div id="grw-connect-wizard" title="Google reviews" style="display:none;">{{wizard}}</div>' +
+        '<div id="grw-connect-wizard" title="Connect Google Reviews" style="display:none;">{{wizard}}</div>' +
         '<div class="grw-connections"></div>' +
     '</div>' +
 
@@ -289,7 +289,7 @@ const GRW_HTML_CONTENT =
             '</div>' +
             '<div class="grw-builder-option">' +
                 '<label>' +
-                    '<input type="checkbox" name="show_round" value="">' +
+                    '<input type="checkbox" name="show_round" value="" checked>' +
                     'Round reviews borders' +
                 '</label>' +
             '</div>' +
@@ -298,21 +298,6 @@ const GRW_HTML_CONTENT =
                     '<input type="checkbox" name="show_shadow" value="">' +
                     'Show reviews shadow' +
                 '</label>' +
-            '</div>' +
-            '<div class="grw-builder-option">' +
-                '<label>' +
-                    '<input type="checkbox" name="centered" value="">' +
-                    'Place by center (only if max-width is set)' +
-                '</label>' +
-            '</div>' +
-            '<div class="grw-builder-option">' +
-                'Container max-width' +
-                '<input type="text" name="max_width" value="" placeholder="for instance: 300px">' +
-                '<small>Be careful: this will make reviews unresponsive</small>' +
-            '</div>' +
-            '<div class="grw-builder-option">' +
-                'Container max-height' +
-                '<input type="text" name="max_height" value="" placeholder="for instance: 500px">' +
             '</div>' +
             '<input id="style_vars" name="style_vars" type="hidden"/>' +
         '</div>' +
@@ -383,7 +368,7 @@ const GRW_HTML_CONTENT =
     '</div>';
 
 const GRW_WIZARD =
-    '<iframe id="gpidc" src="https://app.richplugins.com/connect?authcode={{authcode}}&lang={{lang}}" style="width:100%;height:400px"></iframe>' +
+    '<iframe id="gpidc" src="https://app.richplugins.com/connector/autocomplete?authcode={{authcode}}&lang={{lang}}" style="width:100%;height:400px"></iframe>' +
     '<small class="grw-connect-error"></small>';
 
 const GRW_WIZARD2 =
@@ -465,7 +450,8 @@ function grw_stylechange2(target) {
 }
 
 function stylereset(parentEl, style_var) {
-    let rp = document.getElementsByClassName('wp-gr')[0];
+    window.style_vars.value = '';
+    /*let rp = document.getElementsByClassName('wp-gr')[0];
     if (rp) {
         let inputs = (parentEl ? parentEl : document).querySelectorAll('input[name^="--"]');
 
@@ -494,7 +480,7 @@ function stylereset(parentEl, style_var) {
             rp.style.removeProperty(inputs[i].name);
         }
         window.style_vars.value = rp.getAttribute('style');
-    }
+    }*/
 }
 
 function grw_builder_init($, data) {
@@ -529,6 +515,7 @@ function grw_builder_init($, data) {
                 case 'get_place':
                     $.post(ajaxurl, {
                         pid       : gdata.pid,
+                        lang      : gdata.lang,
                         token     : gdata.token,
                         action    : 'grw_get_place',
                         grw_nonce : jQuery('#grw_nonce').val()
@@ -765,6 +752,8 @@ function grw_feed_save_ajax() {
         }
 
         window.grw_collection_preview.innerHTML = res;
+
+        window.grw_boot && window.grw_boot();
 
         jQuery('.wp-review-hide').unbind('click').click(function() {
             grw_review_hide(jQuery(this));
@@ -1023,15 +1012,15 @@ function grw_connection_add($, el, conn, checked, append) {
 
 function grw_reconnect($, el, conn) {
     if (window.gpidc) {
-        if (conn.props && !conn.props.map_url) {
+        /*if (conn.props && !conn.props.map_url) {
             grw_show_wizard($, '', conn.lang);
-        } else {
+        } else {*/
             conn.event = 'refresh';
             conn.url = conn.props.map_url;
             window.grw_save.disabled = true;
             window.grw_save.innerText = 'Updating...';
             window.gpidc.contentWindow.postMessage({params: conn, action: 'connect'}, '*');
-        }
+        //}
     } else {
         grw_connect_ajax($, el, conn, null, 1);
     }
@@ -1108,7 +1097,7 @@ function grw_connection_render(conn, checked) {
             (conn.lang != undefined ?
             '<div class="grw-builder-option">' +
                 //'<input type="text" name="lang" value="' + conn.lang + '" placeholder="Default language (English)" />' +
-                grw_lang('Show all connected languages', conn.lang) +
+                grw_lang('Show all', conn.lang) +
             '</div>'
             : '' ) +
             (conn.review_count != undefined ?

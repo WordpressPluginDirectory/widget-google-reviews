@@ -121,25 +121,24 @@ class View {
             <div class="grw-content">
                 <div class="grw-content-inner">
                     <?php if (!$options->slider_hide_prevnext) { ?>
-                    <div class="grw-btns grw-prev" tabindex="0">
+                    <button class="grw-btns grw-prev" tabindex="0">
                         <svg viewBox="0 0 24 24" role="none"><path d="M14.6,18.4L8.3,12l6.4-6.4l0.7,0.7L9.7,12l5.6,5.6L14.6,18.4z"></path></svg>
-                    </div>
+                    </button>
                     <?php } ?>
                     <div class="grw-reviews" data-count="<?php echo $count; ?>" data-offset="<?php echo $count; ?>">
                         <?php foreach ($reviews as $review) { $this->grw_slider_review($review, false, $options, $is_admin); } ?>
                     </div>
                     <?php if (!$options->slider_hide_prevnext) { ?>
-                    <div class="grw-btns grw-next" tabindex="0">
+                    <button class="grw-btns grw-next" tabindex="0">
                         <svg viewBox="0 0 24 24" role="none"><path d="M9.4,18.4l-0.7-0.7l5.6-5.6L8.6,6.4l0.7-0.7l6.4,6.4L9.4,18.4z"></path></svg>
-                    </div>
+                    </button>
                     <?php } ?>
                     <?php if (!$options->slider_hide_dots) { ?><div class="rpi-dots-wrap"><div class="rpi-dots"></div></div><?php } ?>
                 </div>
 
             </div>
             <?php } ?>
-        </div>
-        <?php $this->js_loader('grw_init', '\'slider\'');
+        </div><?php
     }
 
     private function render_grid($businesses, $reviews, $options, $is_admin = false) {
@@ -191,8 +190,7 @@ class View {
                 <?php } ?>
             </div>
             <?php } ?>
-        </div>
-        <?php $this->js_loader('grw_init', '\'grid\'');
+        </div><?php
     }
 
     private function render_list($businesses, $reviews, $options, $is_admin = false) {
@@ -214,8 +212,7 @@ class View {
                 <?php $this->grw_place_reviews($reviews, $options, $is_admin); ?>
             </div>
             <?php } ?>
-        </div>
-        <?php $this->js_loader('grw_init');
+        </div><?php
     }
 
     private function render_rating($businesses, $reviews, $options, $is_admin = false) {
@@ -232,8 +229,7 @@ class View {
             ); ?>
             </div>
             <?php } ?>
-        </div>
-        <?php $this->js_loader('grw_init');
+        </div><?php
     }
 
     private function render_badge($businesses, $reviews, $options) {
@@ -290,8 +286,7 @@ class View {
                 </div>
             </div>
             <?php $this->grw_powered(); ?>
-        </div>
-        <?php $this->js_loader('grw_badge_init');
+        </div><?php
     }
 
     function grw_place($rating, $place, $place_img, $reviews, $options, $show_powered = true, $show_writereview = false) {
@@ -321,7 +316,7 @@ class View {
                     $options,
                     __('review us on Google', 'widget-google-reviews'),
                     'return rplg_leave_review_window.call(this)',
-                    '<svg height="18" width="18" role="none"><use href="#grw-google"></use></svg>'
+                    '<svg height="16" width="16" role="none"><use href="#grw-google"></use></svg>'
                 );
             ?></div><?php
             }
@@ -494,7 +489,7 @@ class View {
     }
 
     function grw_provider($review) {
-        ?><svg height="18" width="18" role="none"><use href="#grw-<?php echo $review->provider; ?>"/></svg><?php
+        ?><svg height="16" width="16" role="none"><use href="#grw-<?php echo $review->provider; ?>"/></svg><?php
     }
 
     function grw_stars($rating) {
@@ -541,10 +536,6 @@ class View {
 
     function grw_image($src, $alt, $lazy, $def_ava = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', $atts = '') {
         ?><img src="<?php echo esc_url($src); ?>"<?php if ($lazy) { ?> loading="lazy"<?php } ?> class="grw-review-avatar" alt="<?php echo esc_attr($alt); ?>" width="50" height="50" onerror="if(this.src!='<?php echo $def_ava; ?>')this.src='<?php echo $def_ava; ?>';" <?php echo $atts; ?>><?php
-    }
-
-    function js_loader($func, $data = '') {
-        ?><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" role="presentation" aria-hidden="true" onload="(function(el, data) {var f = function() { window.<?php echo $func; ?> ? <?php echo $func; ?>(el, data) : setTimeout(f, 400) }; f() })(this<?php if (strlen($data) > 0) { ?>, <?php echo str_replace('"', '\'', $data); } ?>);" width="1" height="1" style="display:none!important"><?php
     }
 
     function grw_array($params=null) {
