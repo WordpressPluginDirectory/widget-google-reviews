@@ -100,9 +100,9 @@ class Google_Connect {
                     if (strlen($token) > 0) {
                         $siteurl = get_option('siteurl');
                         $authcode = get_option('grw_auth_code');
-                        $app_url = 'https://app.richplugins.com/connector/place/json';
+                        $app_url = 'https://app.richplugins.com/public/connect/reviews';
                         $args = [
-                            'pid'      => $pid,
+                            'input'    => $pid,
                             'token'    => $token,
                             'siteurl'  => $siteurl,
                             'authcode' => $authcode

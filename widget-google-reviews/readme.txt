@@ -1,14 +1,14 @@
-=== Rich Shortcodes for Google Reviews ===
+=== Rich Showcase for Google Reviews ===
 Contributors: widgetpack
-Tags: google reviews, google map reviews, reviews, google places reviews, testimonials
+Tags: google reviews, reviews, google places reviews, testimonials, ratings
 Requires at least: 4.7
 Requires PHP: 7.2
 Tested up to: 6.9
-Stable tag: 6.9
+Stable tag: 6.9.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display up to 10 Google reviews in less than a minute. Continue collecting new reviews. No limits on connected places, widgets and shortcodes.
+Display up to 10 Google reviews in less than a minute. Continue collecting new reviews. No limits on connected places, widgets, shortcodes and blocks.
 
 == Description ==
 
@@ -27,7 +27,6 @@ Want to see how it works? Watch the short demo below to see how quickly you can 
 * **No limits on created widgets or shortcodes**
 * **Show up to 10 Google reviews on initial setup**
 * **Connect multiple Google business places**
-* Display customer photos and owner replies inside reviews
 * **Fully GDPR-compliant** — no external requests, all data loads from your own website
 * **Automatically updates reviews** and ratings (when using your own API key)
 * Option to hide reviews without text
@@ -76,6 +75,12 @@ Email support in English is also available on weekdays: support@richplugins.com
 * Improve: New option Style Options / Review photos max lines
 
 == Changelog ==
+
+= 6.9.1 =
+* Improve: New Google reviews connection wizard
+* Improve: Show remaining attempts to connect new places or refresh reviews
+* Bugfix: Added support for displaying reviews without language duplicates
+* Bugfix: Reviews without text are now displayed
 
 = 6.9 =
 * Display reviews for all connected languages

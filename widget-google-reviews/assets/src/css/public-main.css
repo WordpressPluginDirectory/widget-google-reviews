@@ -113,9 +113,12 @@
     height: 46px!important;
     width: 46px!important;
     margin-right: 10px!important;
-    overflow: hidden!important;
+    overflow: visible!important;
     border-radius: 50%!important;
-    box-shadow: 0 0 2px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .24)!important
+}
+
+.wp-gr .wp-google-place img {
+    overflow: hidden!important;
 }
 
 .wp-gr .wp-google-reviews img {
@@ -374,12 +377,6 @@
     color: var(--head-name-color, #333333)!important;
     font-size: 16px!important;
     text-decoration: none!important
-}
-
-.wp-gr.wpac .wp-google-left img {
-    width: 46px!important;
-    height: 46px!important;
-    border-radius: 50%!important
 }
 
 .wp-gr.wpac a.wp-google-name {

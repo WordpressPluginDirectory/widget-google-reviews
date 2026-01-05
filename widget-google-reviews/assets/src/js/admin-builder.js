@@ -59,7 +59,6 @@ const GRW_LANGS = [
 const GRW_HTML_CONTENT =
 
     '<div class="grw-builder-platforms grw-builder-inside">' +
-
         '<div class="grw-builder-connect grw-connect-google">Connect Google</div>' +
         '<div id="grw-connect-wizard" title="Connect Google Reviews" style="display:none;">{{wizard}}</div>' +
         '<div class="grw-connections"></div>' +
@@ -68,7 +67,6 @@ const GRW_HTML_CONTENT =
     '<div class="grw-connect-options">' +
 
         '<div class="grw-builder-inside">' +
-
             '<div class="grw-builder-option">' +
                 'Layout' +
                 '<select id="view_mode" name="view_mode">' +
@@ -78,7 +76,6 @@ const GRW_HTML_CONTENT =
                     '<option value="rating">Rating</option>' +
                 '</select>' +
             '</div>' +
-
         '</div>' +
 
         /* Common Options */
@@ -136,7 +133,7 @@ const GRW_HTML_CONTENT =
                     'Hide reviews without text' +
                 '</label>' +
             '</div>' +
-            '<div class="grw-builder-option">' +
+            /*'<div class="grw-builder-option">' +
                 '<label>' +
                     '<input type="checkbox" name="media" value="" checked>' +
                     'Show review images' +
@@ -147,19 +144,19 @@ const GRW_HTML_CONTENT =
                     '<input type="checkbox" name="reply" value="" checked>' +
                     'Show owner responses' +
                 '</label>' +
-            '</div>' +
+            '</div>' +*/
             '<div class="grw-builder-option">' +
                 '<label>' +
                     '<input type="checkbox" name="header_hide_social" value="">' +
                     'Hide rating header, leave only reviews' +
                 '</label>' +
             '</div>' +
-            '<div class="grw-builder-option">' +
+            /*'<div class="grw-builder-option">' +
                 '<label>' +
                     '<input type="checkbox" name="hide_reviews" value="">' +
                     'Hide reviews, leave only rating header' +
                 '</label>' +
-            '</div>' +
+            '</div>' +*/
         '</div>' +
 
         /* Slider Options */
@@ -368,11 +365,11 @@ const GRW_HTML_CONTENT =
     '</div>';
 
 const GRW_WIZARD =
-    '<iframe id="gpidc" src="https://app.richplugins.com/connector/autocomplete?authcode={{authcode}}&lang={{lang}}" style="width:100%;height:400px"></iframe>' +
+    '<iframe id="gpidc" src="https://app.richplugins.com/public/connect?authcode={{authcode}}&lang={{lang}}" style="width:100%;height:99%"></iframe>' +
     '<small class="grw-connect-error"></small>';
 
 const GRW_WIZARD2 =
-    '<div style="width:100%;height:400px">' +
+    '<div id="gpidc" style="height:400px;background:#ffffff;padding:20px">' +
         '<h3>Connection Wizard</h3>' +
         '<p>Please start typing your business name or address in the search field below.<br>Alternatively, you can paste your Google Place ID if you know it.</p>' +
         '<div style="position:relative">' +
@@ -403,6 +400,10 @@ const GRW_WIZARD2 =
         '</div>' +
         '<p id="grw_place_error" class="grw-connect-error"></p>' +
     '</div>';
+
+var GRW_LIGHTBOX;
+
+const GRW_TOAST = rpi.Toast({timeout: 25});
 
 function grw_stylechange2(target) {
     let rp = document.getElementsByClassName('wp-gr')[0];
@@ -488,22 +489,27 @@ function grw_builder_init($, data) {
     var el = document.querySelector(data.el);
     if (!el) return;
 
-    el.innerHTML = GRW_HTML_CONTENT.replace('{{wizard}}',
-        data.key ? GRW_WIZARD2 : GRW_WIZARD.replace('{{authcode}}', data.authcode).replace('{{lang}}', GRW_VARS.lang));
+    const lang = GRW_VARS.lang ? GRW_VARS.lang.toLowerCase().split(/[_-]/)[0] : '';
 
-    var $connect_wizard_el = $('#grw-connect-wizard');
+    el.innerHTML = GRW_HTML_CONTENT.replace('{{wizard}}',
+        data.key ? GRW_WIZARD2 : GRW_WIZARD.replace('{{authcode}}', data.authcode).replace('{{lang}}', lang));
+
+    //var $connect_wizard_el = $('#grw-connect-wizard');
+    GRW_LIGHTBOX = rpi.Lightbox(window.gpidc);
 
     if (data.conns && data.conns.connections && data.conns.connections.length) {
         grw_deserialize_connections($, el, data);
     } else {
-        $('.grw-connect-google').hide();
-        $connect_wizard_el.dialog({
+        //$('.grw-connect-google').hide();
+        GRW_LIGHTBOX.show(true);
+        window.gpidc.focus();
+        /*$connect_wizard_el.dialog({
             modal: false,
             width: '50%',
             maxWidth: '600px',
             closeOnEscape: false,
             open: function() { $(".ui-dialog-titlebar-close").hide() }
-        });
+        });*/
     }
 
     // GPIDC
@@ -529,7 +535,9 @@ function grw_builder_init($, data) {
                     });
                     break;
                 case 'connect':
-                    grw_connect_ajax($, el, gdata, data.authcode, 1);
+                    grw_connect_ajax($, el, gdata, data.authcode, 1, function() {
+                        window.gpidc.contentWindow.postMessage({action: 'connect_done'}, '*');
+                    });
                     break;
             }
         }
@@ -563,7 +571,8 @@ function grw_builder_init($, data) {
     });
 
     $('.grw-builder-connect.grw-connect-google').click(function () {
-        $connect_wizard_el.dialog({modal: true, width: '50%', maxWidth: '600px'});
+        GRW_LIGHTBOX.show(true);
+        //$connect_wizard_el.dialog({modal: true, width: '50%', maxWidth: '600px'});
     });
 
     if ($('.grw-connections').sortable) {
@@ -581,16 +590,28 @@ function grw_builder_init($, data) {
     });
 
     $('#grw_save').click(function() {
-        grw_serialize_connections();
-        return false;
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('grw_feed_id')) {
+            grw_serialize_connections();
+            return false;
+        } else {
+            return true;
+        }
     });
 
-    window.addEventListener('beforeunload', function(e) {
-        if (!GRW_AUTOSAVE_TIMEOUT) return undefined;
+    let _isSubmit = false;
+    const form = document.querySelector('.grw-builder form');
+    form.addEventListener('submit', function () {
+        _isSubmit = true;
+    });
 
-        var msg = 'It looks like you have been editing something. If you leave before saving, your changes will be lost.';
-        (e || window.event).returnValue = msg;
-        return msg;
+    // Confirmation alert before close the page if unautosave
+    window.addEventListener('beforeunload', function(e) {
+        const url = new URL(window.location.href);
+        if (!_isSubmit && (!url.searchParams.has('grw_feed_id') || GRW_AUTOSAVE_TIMEOUT)) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
     });
 
     if (data.key) {
@@ -763,12 +784,12 @@ function grw_feed_save_ajax() {
         if (!window.grw_post_id.value) {
             var post_id = document.querySelector('.wp-gr').getAttribute('data-id');
             window.grw_post_id.value = post_id;
-            window.location.href = GRW_VARS.builderUrl + '&grw_feed_id=' + post_id + '&grw_feed_new=1';
-        } else {
-            var $rateus = jQuery('#grw-rate_us');
-            if ($rateus.length && !$rateus.hasClass('grw-flash-visible') && !window['grw_rateus']) {
-                $rateus.addClass('grw-flash-visible');
-            }
+            //window.location.href = GRW_VARS.builderUrl + '&grw_feed_id=' + post_id + '&grw_feed_new=1';
+        }
+
+        var $rateus = jQuery('#grw-rate_us');
+        if ($rateus.length && !$rateus.hasClass('grw-flash-visible') && !window['grw_rateus']) {
+            $rateus.addClass('grw-flash-visible');
         }
 
         window.grw_save.innerText = 'Save & Update';
@@ -870,11 +891,17 @@ function grw_connect_ajax($, el, params, authcode, attempt, cb) {
             grw_connection_add($, el, connection_params);
             grw_serialize_connections();
 
-        } else {
-            let err = grw_get_error(res);
+            GRW_TOAST.show({
+                msg: (params.event === 'refresh' ? 'Reviews updated' : 'Widget saved') + ' successfully. ' +
+                     (res.result.credits > -1 ? '<br><b>' + res.result.credits + ' attempts remaining (without your API key).</b>' : ''),
+                type: 'success'
+            });
 
-            if (params.event === 'refresh' && err.indexOf('The place you are trying to connect to does not have a rating yet') > -1) {
-                grw_show_wizard($, 'It seems connection lost, please try to reconnect your Google reviews again', params.lang);
+        } else {
+            const err = grw_get_error(res);
+            GRW_TOAST.show({msg: err, type: 'error'});
+            /*if (params.event === 'refresh') {
+                GRW_TOAST.show({msg: err, type: 'error'});
             } else {
                 grw_connect_error($, err, function() {
                     if (attempt > 1) return;
@@ -884,7 +911,7 @@ function grw_connect_ajax($, el, params, authcode, attempt, cb) {
                         });
                     }
                 });
-            }
+            }*/
         }
 
         cb && cb(res);
@@ -893,9 +920,10 @@ function grw_connect_ajax($, el, params, authcode, attempt, cb) {
 }
 
 function grw_wizard_close() {
-    try {
+    GRW_LIGHTBOX.hide();
+    /*try {
         jQuery('#grw-connect-wizard').dialog('close');
-    } catch (e) {}
+    } catch (e) {}*/
 }
 
 function grw_connect_error($, error_message, cb) {
@@ -1011,7 +1039,7 @@ function grw_connection_add($, el, conn, checked, append) {
 }
 
 function grw_reconnect($, el, conn) {
-    if (window.gpidc) {
+    if (window.gpidc instanceof HTMLIFrameElement) {
         /*if (conn.props && !conn.props.map_url) {
             grw_show_wizard($, '', conn.lang);
         } else {*/
@@ -1026,7 +1054,7 @@ function grw_reconnect($, el, conn) {
     }
 }
 
-function grw_show_wizard($, title, lang) {
+/*function grw_show_wizard($, title, lang) {
     if (lang) {
         window.gpidc.src = window.gpidc.src.replace(/&lang=.+/, '&lang=' + lang);
     }
@@ -1036,7 +1064,7 @@ function grw_show_wizard($, title, lang) {
         width: '50%',
         maxWidth: '600px'
     });
-}
+}*/
 
 function grw_connection_id(conn) {
     var id = 'grw-' + conn.platform + '-' + conn.id.replace(/\//g, '');
