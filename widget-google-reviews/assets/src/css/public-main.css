@@ -115,6 +115,7 @@
     margin-right: 10px!important;
     overflow: visible!important;
     border-radius: 50%!important;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24) !important;
 }
 
 .wp-gr .wp-google-place img {
@@ -174,7 +175,7 @@
     color: var(--name-color, #333333)!important;
     font-size: 100%!important;
     font-weight: bold!important;
-    margin: 0 0 2px!important;
+    margin: 0 0 4px!important;
     padding-right: 6px!important;
     text-decoration: none!important
 }
@@ -375,11 +376,12 @@
 
 .wp-gr.wpac .wp-google-name a {
     color: var(--head-name-color, #333333)!important;
-    font-size: 16px!important;
+    font-size: 18px!important;
     text-decoration: none!important
 }
 
 .wp-gr.wpac a.wp-google-name {
+    margin: 0!important;
     color: var(--name-color, #154fc1)!important;
     text-decoration: none!important;
     white-space: nowrap!important;
@@ -676,10 +678,11 @@
     white-space: nowrap!important;
     text-overflow: ellipsis!important;
     line-height: 24px !important;
+    padding-bottom: 2px !important;
 }
 
 .wp-gr .grw-review .wp-google-stars {
-    margin: 8px 0 var(--rev-gap)!important;
+    margin: 6px 0 var(--rev-gap)!important;
 }
 
 .wp-gr .grw-review .wp-google-feedback {

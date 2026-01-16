@@ -103,7 +103,7 @@
     outline: invert none medium!important;
     /*overflow: visible!important;*/
     padding: 0!important;
-    position: static!important;
+    position: static;
     quotes: "" ""!important;
     right: auto!important;
     table-layout: auto!important;
@@ -116,7 +116,7 @@
     vertical-align: baseline!important;
     visibility: inherit!important;
     white-space: normal!important;
-    width: auto!important;
+    width: auto;
     word-spacing: normal!important;
     z-index: auto!important;
     -moz-border-radius: 0!important;

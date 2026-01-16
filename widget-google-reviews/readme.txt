@@ -4,7 +4,7 @@ Tags: google reviews, reviews, google places reviews, testimonials, ratings
 Requires at least: 4.7
 Requires PHP: 7.2
 Tested up to: 6.9
-Stable tag: 6.9.1
+Stable tag: 6.9.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,11 @@ Email support in English is also available on weekdays: support@richplugins.com
 * Improve: New option Style Options / Review photos max lines
 
 == Changelog ==
+
+= 6.9.2 =
+* Improve: Shortcode appears immediately after reviews are connected in widget
+* Bugfix: Custom business photo for Google places in widgets
+* Minor style adjustments
 
 = 6.9.1 =
 * Improve: New Google reviews connection wizard

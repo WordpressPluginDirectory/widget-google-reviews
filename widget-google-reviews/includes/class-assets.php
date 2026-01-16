@@ -13,6 +13,7 @@ class Assets {
         'grw-public-clean-css'    => 'css/public-clean',
         'grw-public-main-css'     => 'css/public-main',
 
+        //'rpi-stars-css'           => 'https://cdn.reviewsplugin.com/assets/css/stars.css',
         'rpi-common-css'          => 'https://cdn.reviewsplugin.com/assets/css/common.css',
         'rpi-lightbox-css'        => 'https://cdn.reviewsplugin.com/assets/css/lightbox.css'
     );
@@ -101,7 +102,7 @@ class Assets {
     }
 
     public function register_styles() {
-        $styles = array('grw-admin-main-css', 'grw-public-main-css', 'rpi-common-css', 'rpi-lightbox-css');
+        $styles = array('grw-admin-main-css', 'grw-public-main-css', /*'rpi-stars-css',*/ 'rpi-common-css', 'rpi-lightbox-css');
         if ($this->debug) {
             array_push($styles, 'grw-public-clean-css');
         }
@@ -160,6 +161,7 @@ class Assets {
         if ($this->debug) {
             wp_enqueue_style('grw-public-clean-css');
             wp_style_add_data('grw-public-clean-css', 'rtl', 'replace');
+            //wp_enqueue_style('rpi-stars-css');
             wp_enqueue_style('rpi-common-css');
             wp_enqueue_style('rpi-lightbox-css');
         }
