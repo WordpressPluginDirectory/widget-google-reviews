@@ -38,6 +38,8 @@ class Activator {
             'grw_last_error',
             'rplg_rev_notice_show',
             'grw_rate_us',
+            'grw_inlinecss_off',
+            'grw_rucss_safelist',
         );
     }
 

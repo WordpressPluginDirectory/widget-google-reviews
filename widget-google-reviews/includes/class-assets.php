@@ -10,10 +10,12 @@ class Assets {
 
     private static $css_assets = array(
         'grw-admin-main-css'      => 'css/admin-main',
-        'grw-public-clean-css'    => 'css/public-clean',
         'grw-public-main-css'     => 'css/public-main',
+        'grw-public-badge-css'    => 'css/public-badge',
 
-        //'rpi-stars-css'           => 'https://cdn.reviewsplugin.com/assets/css/stars.css',
+        'rpi-flex-css'            => 'https://cdn.reviewsplugin.com/assets/css/flex.css',
+        'rpi-stars-css'           => 'https://cdn.reviewsplugin.com/assets/css/stars.css',
+        'rpi-slider-css'          => 'https://cdn.reviewsplugin.com/assets/css/slider.css',
         'rpi-common-css'          => 'https://cdn.reviewsplugin.com/assets/css/common.css',
         'rpi-lightbox-css'        => 'https://cdn.reviewsplugin.com/assets/css/lightbox.css'
     );
@@ -83,7 +85,6 @@ class Assets {
     function style_async($tag, $handle) {
         $css_assets = array(
             'grw-admin-main-css'   => 'css/admin-main',
-            'grw-public-clean-css' => 'css/public-clean',
             'grw-public-main-css'  => 'css/public-main',
         );
         if (isset($handle) && array_key_exists($handle, $css_assets)) {
@@ -102,10 +103,16 @@ class Assets {
     }
 
     public function register_styles() {
-        $styles = array('grw-admin-main-css', 'grw-public-main-css', /*'rpi-stars-css',*/ 'rpi-common-css', 'rpi-lightbox-css');
-        if ($this->debug) {
-            array_push($styles, 'grw-public-clean-css');
-        }
+        $styles = array(
+            'grw-admin-main-css',
+            'grw-public-main-css',
+            'grw-public-badge-css',
+            'rpi-flex-css',
+            'rpi-stars-css',
+            'rpi-slider-css',
+            'rpi-common-css',
+            'rpi-lightbox-css'
+        );
         $this->register_styles_loop($styles);
     }
 
@@ -159,9 +166,9 @@ class Assets {
 
     public function enqueue_public_styles() {
         if ($this->debug) {
-            wp_enqueue_style('grw-public-clean-css');
-            wp_style_add_data('grw-public-clean-css', 'rtl', 'replace');
-            //wp_enqueue_style('rpi-stars-css');
+            wp_enqueue_style('rpi-flex-css');
+            wp_enqueue_style('rpi-stars-css');
+            wp_enqueue_style('rpi-slider-css');
             wp_enqueue_style('rpi-common-css');
             wp_enqueue_style('rpi-lightbox-css');
         }

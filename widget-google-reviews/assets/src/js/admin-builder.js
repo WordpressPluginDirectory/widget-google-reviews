@@ -241,8 +241,8 @@ const GRW_HTML_CONTENT =
                 'Button color' +
             '</div>' +
             '<div class="grw-builder-option">' +
-                '<input type="color" name="--rev-color" value="#fafafa" data-val="#fafafa" data-defval="#fafafa"/>' +
-                '<input type="text" value="#fafafa"/>' +
+                '<input type="color" name="--rev-color" value="#f4f4f4" data-val="#f4f4f4" data-defval="#f4f4f4"/>' +
+                '<input type="text" value="#f4f4f4"/>' +
                 'Reviews color' +
             '</div>' +
             '<div class="grw-builder-option">' +
@@ -266,9 +266,15 @@ const GRW_HTML_CONTENT =
                     'Dark background' +
                 '</label>' +
             '</div>' +
-            '<div class="grw-builder-option">' +
+            /*'<div class="grw-builder-option">' +
                 '<label>' +
                     '<input type="checkbox" name="hide_backgnd" value="">' +
+                    'Hide reviews background' +
+                '</label>' +
+            '</div>' +*/
+            '<div class="grw-builder-option">' +
+                '<label>' +
+                    '<input type="checkbox" name="--rev-color" value="#f4f4f4" data-on="transparent" data-off="#f4f4f4" data-defval="#f4f4f4">' +
                     'Hide reviews background' +
                 '</label>' +
             '</div>' +
@@ -334,13 +340,13 @@ const GRW_HTML_CONTENT =
                 '<span class="grw-quest grw-quest-top grw-toggle" title="Click to help">?</span>' +
                 '<div class="grw-quest-help" style="display:none;">If the direct link to all reviews <b>https://search.google.com/local/reviews?placeid=&lt;PLACE_ID&gt;</b> does not work with your Google place (leads to 404), please use this option to use the default reviews link to Google map.</div>' +
             '</div>' +
-            /*'<div class="grw-builder-option">' +
-                'Star icon style' +
-                '<select name="star_style">' +
+            '<div class="grw-builder-option">' +
+                'Widget style' +
+                '<select name="style">' +
                     '<option value="legacy">Legacy</option>' +
                     '<option value="modern" selected="selected">Modern</option>' +
                 '</select>' +
-            '</div>' +*/
+            '</div>' +
             '<div class="grw-builder-option">' +
                 'Reviewer avatar size' +
                 '<select name="reviewer_avatar_size">' +
@@ -553,11 +559,11 @@ function grw_builder_init($, data) {
     // Init slider breakpoints
     grw_sbs_init();
 
-    $('.grw-connect-options input[type="text"],.grw-connect-options textarea').keyup(function() {
+    $('.grw-connect-options input[type="text"]:not([name^="--"]),.grw-connect-options textarea').keyup(function() {
         clearTimeout(GRW_AUTOSAVE_TIMEOUT);
         GRW_AUTOSAVE_TIMEOUT = setTimeout(grw_serialize_connections, GRW_AUTOSAVE_KEYUP_TIMEOUT);
     });
-    $('.grw-connect-options input[type="checkbox"],.grw-connect-options select').change(function() {
+    $('.grw-connect-options input[type="checkbox"]:not([name^="--"]),.grw-connect-options select').change(function() {
         grw_serialize_connections();
     });
     $('.grw-connect-options input[name^="--"]').on('input', function() {

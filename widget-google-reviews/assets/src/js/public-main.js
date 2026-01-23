@@ -87,11 +87,21 @@ function grw_init(el, layout) {
     }
 }
 
+function grw_root_bg(el) {
+    if (!el) return null;
+    const c = getComputedStyle(el).backgroundColor.replace(/\s+/g, '').toLowerCase();
+    if (c && c !== 'transparent' && c !== 'rgba(0,0,0,0)') {
+        return getComputedStyle(el).backgroundColor;
+    }
+    return grw_root_bg(el.parentElement);
+}
+
 function grw_boot() {
     const els = document.querySelectorAll('.wp-gr[data-exec="false"]');
     for (let i = 0; i < els.length; i++) {
         (function(elem) {
             grw_init(elem, elem.getAttribute('data-layout'));
+            elem.style.setProperty('--root-bg', grw_root_bg(elem));
         })(els[i]);
     }
 }
