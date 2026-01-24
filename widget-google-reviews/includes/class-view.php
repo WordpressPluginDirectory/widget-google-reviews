@@ -99,22 +99,18 @@ class View {
                     'mousestop'   => $options->slider_mousestop,
                     'breakpoints' => $options->slider_breakpoints
                 )
-            ); ?>'>
-            <?php if (count($businesses) > 0) { ?>
-            <div class="grw-header">
-                <div class="grw-header-inner">
-                    <?php $this->grw_place(
-                        $businesses[0]->rating,
-                        $businesses[0],
-                        $businesses[0]->photo,
-                        $reviews,
-                        $options,
-                        true,
-                        true
-                    ); ?>
-                </div>
-            </div>
-            <?php }
+            ); ?>'><?php
+            if (count($businesses) > 0) {
+                $this->grw_place(
+                    $businesses[0]->rating,
+                    $businesses[0],
+                    $businesses[0]->photo,
+                    $reviews,
+                    $options,
+                    true,
+                    true
+                );
+            }
             $count = count($reviews);
             if ($count > 0) { ?>
             <div class="rpi-slides-root grw-content">
@@ -138,22 +134,18 @@ class View {
 
     private function render_grid($businesses, $reviews, $options, $is_admin = false) {
         $hr = false;
-        if (count($businesses) > 0) { ?>
-        <div class="grw-header<?php if ($options->header_center) { ?> wp-place-center<?php } ?>">
-            <div class="grw-header-inner">
-                <?php $this->grw_place(
-                    $businesses[0]->rating,
-                    $businesses[0],
-                    $businesses[0]->photo,
-                    $reviews,
-                    $options,
-                    true,
-                    true
-                ); ?>
-            </div>
-        </div>
-        <?php } ?>
-        <div class="grw-row grw-row-m" data-options='<?php
+        if (count($businesses) > 0) {
+            $this->grw_place(
+                $businesses[0]->rating,
+                $businesses[0],
+                $businesses[0]->photo,
+                $reviews,
+                $options,
+                true,
+                true
+            );
+        }
+        ?><div class="grw-row grw-row-m" data-options='<?php
             echo json_encode(
                 array(
                     'breakpoints' => $options->slider_breakpoints
@@ -187,7 +179,7 @@ class View {
     }
 
     private function render_list($businesses, $reviews, $options, $is_admin = false) {
-        ?><div class="wp-google-list rpi-flx rpi-col16"><?php
+        ?><div class="wp-google-list"><?php
             foreach ($businesses as $business) {
                 $this->grw_place(
                     $business->rating,
@@ -274,35 +266,37 @@ class View {
     }
 
     function grw_place($rating, $place, $place_img, $reviews, $options, $show_powered = true, $show_writereview = false) {
-        $style = $options->header_center ? 'style="--dir:column;--align:center"' : '';
-        ?><div class="rpi-flx rpi-row12"<?php echo $style; ?>><?php
-            if (!$options->header_hide_photo) {
-                $alt_val = sprintf(__('%s place picture', 'widget-google-reviews'), $place->name);
-                $alt = empty($options->aria_label) ? $alt_val : ($options->header_hide_name ? $alt_val : '');
-                $this->grw_image($place_img, $alt, $options->lazy_load_img);
-            }
-            ?><div class="rpi-flx rpi-col8"<?php echo $style; ?>><?php
-                if (!$options->header_hide_name) {
-                    ?><div class="wp-google-name"><?php
-                    echo $this->grw_anchor($place->url, '', $place->name, $options, sprintf(__('%s place profile', 'widget-google-reviews'), $place->name));
-                    ?></div><?php
+        $style = $options->header_center ? 'style="--dir:column;--align:center;--star-align-self:center"' : '';
+        ?><div class="grw-header">
+            <div class="grw-header-inner rpi-flx rpi-row12"<?php echo $style; ?>><?php
+                if (!$options->header_hide_photo) {
+                    $alt_val = sprintf(__('%s place picture', 'widget-google-reviews'), $place->name);
+                    $alt = empty($options->aria_label) ? $alt_val : ($options->header_hide_name ? $alt_val : '');
+                    $this->grw_image($place_img, $alt, $options->lazy_load_img);
                 }
-                $this->grw_place_rating($rating, $place->review_count, $options);
-                if ($show_powered) $this->grw_powered();
-                if (!$options->hide_writereview) {
-                    ?><div class="wp-google-wr"><?php
-                        echo $this->grw_anchor(
-                            'https://search.google.com/local/writereview?placeid=' . $place->id,
-                            '',
-                            __('review us on', 'widget-google-reviews'),
-                            $options,
-                            __('review us on Google', 'widget-google-reviews'),
-                            'return rplg_leave_review_window.call(this)',
-                            '<svg height="16" width="16" role="none"><use href="#grw-google"></use></svg>'
-                        );
-                    ?></div><?php
-                }
-            ?></div>
+                ?><div class="rpi-flx rpi-col8"<?php echo $style; ?>><?php
+                    if (!$options->header_hide_name) {
+                        ?><div class="wp-google-name"><?php
+                        echo $this->grw_anchor($place->url, '', $place->name, $options, sprintf(__('%s place profile', 'widget-google-reviews'), $place->name));
+                        ?></div><?php
+                    }
+                    $this->grw_place_rating($rating, $place->review_count, $options);
+                    if ($show_powered) $this->grw_powered();
+                    if (!$options->hide_writereview) {
+                        ?><div class="wp-google-wr"><?php
+                            echo $this->grw_anchor(
+                                'https://search.google.com/local/writereview?placeid=' . $place->id,
+                                '',
+                                __('review us on', 'widget-google-reviews'),
+                                $options,
+                                __('review us on Google', 'widget-google-reviews'),
+                                'return rplg_leave_review_window.call(this)',
+                                '<svg height="16" width="16" role="none"><use href="#grw-google"></use></svg>'
+                            );
+                        ?></div><?php
+                    }
+                ?></div>
+            </div>
         </div><?php
     }
 

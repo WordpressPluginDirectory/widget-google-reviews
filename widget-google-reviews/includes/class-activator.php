@@ -209,6 +209,10 @@ class Activator {
             $this->database->migrate_review_texts();
         }
 
+        if (version_compare($last_active_version, '6.9.4.1', '<')) {
+            update_option('grw_debug_mode', '0');
+        }
+
         if (!empty($wpdb->last_error)) {
             update_option('grw_last_error', time() . ': ' . $wpdb->last_error);
         }

@@ -4,7 +4,7 @@ Tags: google reviews, reviews, google places reviews, testimonials, ratings
 Requires at least: 4.7
 Requires PHP: 7.2
 Tested up to: 6.9
-Stable tag: 6.9.4
+Stable tag: 6.9.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,11 @@ Email support in English is also available on weekdays: support@richplugins.com
 * Improve: New option Style Options / Review photos max lines
 
 == Changelog ==
+
+= 6.9.4.1 =
+* Fixed an issue with duplicated star icons
+* Fixed header centering issue
+* Minor style fixes
 
 = 6.9.4 =
 * Fixed conflicts between star icons

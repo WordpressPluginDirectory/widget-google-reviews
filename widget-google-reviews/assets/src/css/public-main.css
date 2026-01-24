@@ -387,6 +387,10 @@
     width: 100%!important;
 }
 
+.wp-gr .wp-google-list .grw-header-inner {
+    padding: 0 0 16px 0!important;
+}
+
 .wp-gr .grw-review-inner.grw-round {
     border-radius: 8px!important
 }
