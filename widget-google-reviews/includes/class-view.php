@@ -6,8 +6,6 @@ class View {
 
     const G_AVA_SIZE = 's120';
 
-    private $inline_css_cache = array();
-
     public function render($feed_id, $businesses, $reviews, $options, $is_admin = false) {
         ob_start();
 
@@ -48,7 +46,6 @@ class View {
                     <g fill="none" fill-rule="evenodd"><path d="M482.56 261.36c0-16.73-1.5-32.83-4.29-48.27H256v91.29h127.01c-5.47 29.5-22.1 54.49-47.09 71.23v59.21h76.27c44.63-41.09 70.37-101.59 70.37-173.46z" fill="#4285f4"/><path d="M256 492c63.72 0 117.14-21.13 156.19-57.18l-76.27-59.21c-21.13 14.16-48.17 22.53-79.92 22.53-61.47 0-113.49-41.51-132.05-97.3H45.1v61.15c38.83 77.13 118.64 130.01 210.9 130.01z" fill="#34a853"/><path d="M123.95 300.84c-4.72-14.16-7.4-29.29-7.4-44.84s2.68-30.68 7.4-44.84V150.01H45.1C29.12 181.87 20 217.92 20 256c0 38.08 9.12 74.13 25.1 105.99l78.85-61.15z" fill="#fbbc05"/><path d="M256 113.86c34.65 0 65.76 11.91 90.22 35.29l67.69-67.69C373.03 43.39 319.61 20 256 20c-92.25 0-172.07 52.89-210.9 130.01l78.85 61.15c18.56-55.78 70.59-97.3 132.05-97.3z" fill="#ea4335"/><path d="M20 20h472v472H20V20z"/></g>
                 </symbol>
             </svg><?php
-            $inlinecss_off = get_option('grw_inlinecss_off');
             switch ($options->view_mode) {
                 case 'slider':
                     $this->render_slider($businesses, $reviews, $options, $is_admin);
@@ -64,17 +61,11 @@ class View {
                     break;
                 case 'badge':
                     $this->render_badge($businesses, $reviews, $options);
-                    if ($inlinecss_off != 'true') {
-                        echo $this->inline_css('public-badge');
-                    }
                     break;
                 default:
                     $this->render_list($businesses, $reviews, $options, $is_admin);
             }
-            if ($inlinecss_off != 'true') {
-                echo $this->inline_css('public-main');
-            }
-        ?><script>var f=function(e){return e&&(c=getComputedStyle(e).backgroundColor.replace(/\s/g,''))!=='transparent'&&c!=='rgba(0,0,0,0)'?c:f(e.parentElement)},c='',s=document.currentScript,p=s&&s.parentElement;p&&p.style.setProperty('--root-bg',f(p)||'');</script></div><?php
+        ?><script>(function(){let c='',f=function(e){return e&&(c=getComputedStyle(e).backgroundColor.replace(/\s/g,''))!=='transparent'&&c!=='rgba(0,0,0,0)'?c:f(e.parentElement)},s=document.currentScript,p=s&&s.parentElement;if(!p)return;let w=p.offsetWidth,r=p.querySelector('.grw-row');p.style.setProperty('--root-bg',f(p)||'');if(r)r.className='grw-row grw-row-'+(w<510?'xs':(w<750?'x':(w<1100?'s':(w<1450?'m':(w<1800?'l':'xl')))))})()</script></div><?php
         return preg_replace('/[\n\r]|(>)\s+(<)/', '$1$2', ob_get_clean());
     }
 
@@ -90,8 +81,7 @@ class View {
     }
 
     private function render_slider($businesses, $reviews, $options, $is_admin = false) {
-        ?>
-        <div class="grw-row grw-row-m" data-options='<?php
+        ?><div class="grw-row grw-row-m" data-options='<?php
             echo json_encode(
                 array(
                     'speed'       => $options->slider_speed ? $options->slider_speed : 3,
@@ -101,35 +91,32 @@ class View {
                 )
             ); ?>'><?php
             if (count($businesses) > 0) {
-                $this->grw_place(
-                    $businesses[0]->rating,
-                    $businesses[0],
-                    $businesses[0]->photo,
-                    $reviews,
-                    $options,
-                    true,
-                    true
-                );
+                $this->grw_place($businesses[0]->rating, $businesses[0], $businesses[0]->photo, $reviews, $options, true, true);
             }
             $count = count($reviews);
-            if ($count > 0) { ?>
-            <div class="rpi-slides-root grw-content">
-                <div class="grw-content-inner">
-                    <?php if (!$options->slider_hide_prevnext) { ?>
-                    <button class="rpi-ltgt rpi-lt grw-prev" tabindex="0"></button>
-                    <?php } ?>
-                    <div class="rpi-slides grw-reviews" data-count="<?php echo $count; ?>" data-offset="<?php echo $count; ?>">
-                        <?php foreach ($reviews as $review) { $this->grw_slider_review($review, false, $options, $is_admin); } ?>
-                    </div>
-                    <?php if (!$options->slider_hide_prevnext) { ?>
-                    <button class="rpi-ltgt rpi-gt grw-next" tabindex="0"></button>
-                    <?php } ?>
-                    <?php if (!$options->slider_hide_dots) { ?><div class="rpi-dots-wrap"><div class="rpi-dots"></div></div><?php } ?>
-                </div>
-
-            </div>
-            <?php } ?>
-        </div><?php
+            if ($count > 0) {
+            ?><div class="rpi-slides-root grw-content">
+                <div class="grw-content-inner"><?php
+                if (!$options->slider_hide_prevnext) {
+                    $aria_label = $this->grw_aria_label($options, 'Previous');
+                    ?><button class="rpi-ltgt rpi-lt grw-prev"<?php echo $aria_label; ?> tabindex="0"></button><?php
+                }
+                    ?><div class="rpi-slides grw-reviews" data-count="<?php echo $count; ?>" data-offset="<?php echo $count; ?>"><?php
+                        foreach ($reviews as $review) {
+                            $this->grw_slider_review($review, false, $options, $is_admin);
+                        }
+                    ?></div><?php
+                if (!$options->slider_hide_prevnext) {
+                    $aria_label = $this->grw_aria_label($options, 'Next');
+                    ?><button class="rpi-ltgt rpi-gt grw-next"<?php echo $aria_label; ?> tabindex="0"></button><?php
+                }
+                if (!$options->slider_hide_dots) {
+                    ?><div class="rpi-dots-wrap"><div class="rpi-dots"></div></div><?php
+                }
+                ?></div>
+            </div><?php
+            }
+        ?></div><?php
     }
 
     private function render_grid($businesses, $reviews, $options, $is_admin = false) {
@@ -301,8 +288,7 @@ class View {
     }
 
     function grw_place_rating($rating, $review_count, $opts) {
-        $aria_label = isset($opts->aria_label) && $opts->aria_label ?
-            ' aria-label="' . sprintf(__('Rating: %s out of 5', 'widget-google-reviews'), $rating) . '"' : '';
+        $aria_label = $this->grw_aria_label($opts, sprintf(__('Rating: %s out of 5', 'widget-google-reviews'), $rating), 'img');
         ?><span class="rpi-stars"<?php echo $aria_label; ?> style="--rating:<?php echo $rating; ?>"><?php echo $rating; ?></span><?php
         if (!$opts->hide_based_on && isset($review_count)) {
         ?><div class="wp-google-based"><?php echo vsprintf(__('Based on %s reviews', 'widget-google-reviews'), $this->grw_array($review_count)); ?></div><?php
@@ -469,12 +455,12 @@ class View {
     }
 
     function grw_anchor($url, $class, $text, $options, $aria_label = '', $onclick = '', $after_raw = '') {
-        echo '<a href="' . esc_url($url) . '"' . ($class ? ' class="' . $class . '"' : '') . ($options->open_link ? ' target="_blank"' : '') . ' rel="' . ($options->nofollow_link ? 'nofollow ' : '') . 'noopener"' . $this->grw_aria_label($options, $aria_label) . (empty($onclick) ? '' : ' onclick="' . $onclick . '"') . '>' . esc_html($text) . $after_raw . '</a>';
+        $al = $this->grw_aria_label($options, esc_attr($aria_label) . ' - ' . __('opens in a new window', 'widget-google-reviews'));
+        echo '<a href="' . esc_url($url) . '"' . ($class ? ' class="' . $class . '"' : '') . ($options->open_link ? ' target="_blank"' : '') . ' rel="' . ($options->nofollow_link ? 'nofollow ' : '') . 'noopener"' . $al . (empty($onclick) ? '' : ' onclick="' . $onclick . '"') . '>' . esc_html($text) . $after_raw . '</a>';
     }
 
-    function grw_aria_label($options, $aria_label = '') {
-        return !empty($options->aria_label) && !empty($aria_label) ?
-            ' role="link" aria-label="' . esc_attr($aria_label) . ' - ' . __('opens in a new window', 'widget-google-reviews') . '"' : '';
+    function grw_aria_label($options, $aria_label, $role = '') {
+        return empty($options->aria_label) || empty($aria_label) ? '' : (empty($role) ? '' : ' role="' . $role . '"') . ' aria-label="' . $aria_label . '"';
     }
 
     function grw_image($src, $alt, $lazy, $def_ava = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', $atts = '') {
@@ -487,25 +473,5 @@ class View {
             $params = array_slice($params, 0);
         }
         return $params;
-    }
-
-    private function inline_css($name) {
-        $key = $name . (is_rtl() ? '-rtl' : '');
-
-        if (isset($this->inline_css_cache[$key])) {
-            return $this->inline_css_cache[$key];
-        }
-
-        $file = GRW_PLUGIN_PATH . '/assets/css/' . $key . '.css';
-        if (!is_readable($file)) {
-            return $this->inline_css_cache[$key] = '';
-        }
-
-        $css = str_replace('</style', '<\/style', (string) file_get_contents($file));
-
-        return $this->inline_css_cache[$key] =
-            '<span class="grw-hide" style="display:none"><style>' .
-            $css .
-            '.grw-hide{display:none!important}</style></span>';
     }
 }
