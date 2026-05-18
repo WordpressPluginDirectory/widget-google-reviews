@@ -89,6 +89,7 @@
 
 /*-------------------------------- Main CSS --------------------------------*/
 .wp-gr {
+    --card-gap: 4px;
     --rev-gap: 4px;
     --img-size: 46px;
     --media-gap: 8px;
@@ -97,15 +98,22 @@
     --color: #fb8e28;
     --rev-color: #f4f4f4;
     --rpi-star-color: var(--star-color, var(--color));
-    --rpi-slider-gap: 8px;
-    --rpi-slider-btn: 1em;
-    --rpi-slider-btn-padding: .5em;
-    --slider-ltgt-bg: var(--rev-color);
-    --slider-ltgt-border-width: 4px;
     --slider-dot-size: 8px;
     --slider-dot-gap: 8px;
     --slider-dots-visible: 5;
     --slider-act-dot-color: var(--color);
+
+    position: relative !important;
+    display: block!important;
+    min-width: 0!important;
+    max-width: 100%!important;
+    margin: 0!important;
+    padding: 0!important;
+    line-height: normal!important;
+    text-align: start!important;
+    direction: ltr!important;
+    overflow-wrap: break-word!important;
+    box-sizing: border-box!important;
 }
 
 .wp-gr .wp-google-based,
@@ -174,10 +182,15 @@
 }
 
 .wp-gr .grw-header .wp-google-name {
-    width: auto!important;
+    width: 100%!important;
     margin: 0!important;
     padding: 0!important;
     font-size: 128%!important;
+    white-space: normal!important;
+}
+
+.wp-gr .grw-header-inner > .rpi-flx {
+    overflow: hidden!important;
 }
 
 .wp-gr a.wp-google-name {
@@ -275,15 +288,6 @@
 }
 
 /*-------------------------------- row --------------------------------*/
-.wp-gr {
-    display: block!important;
-    width: 100%!important;
-    padding-bottom: 20px!important;
-    text-align: left!important;
-    direction: ltr!important;
-    box-sizing: border-box!important;
-}
-
 .wp-gr .grw-row {
     display: -ms-flexbox!important;
     display: flex!important;
@@ -382,7 +386,7 @@
 .wp-gr .grw-header-inner,
 .wp-gr .grw-review-inner {
     position: relative!important;
-    /*margin: 0 10px!important;*/
+    margin: 4px!important;
     padding: 16px!important;
     width: 100%!important;
 }

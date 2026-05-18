@@ -341,13 +341,6 @@ const GRW_HTML_CONTENT =
                 '<div class="grw-quest-help" style="display:none;">If the direct link to all reviews <b>https://search.google.com/local/reviews?placeid=&lt;PLACE_ID&gt;</b> does not work with your Google place (leads to 404), please use this option to use the default reviews link to Google map.</div>' +
             '</div>' +
             '<div class="grw-builder-option">' +
-                'Widget style' +
-                '<select name="style">' +
-                    '<option value="legacy">Legacy</option>' +
-                    '<option value="modern" selected="selected">Modern</option>' +
-                '</select>' +
-            '</div>' +
-            '<div class="grw-builder-option">' +
                 'Reviewer avatar size' +
                 '<select name="reviewer_avatar_size">' +
                     '<option value="56" selected="selected">Small: 56px</option>' +
@@ -975,13 +968,18 @@ function grw_connection_add($, el, conn, checked, append) {
     var connected_id = grw_connection_id(conn),
         connected_el = $('#' + connected_id);
 
-    if (connected_el.length && conn.props && conn.props.map_url) {
-        let propsEl = connected_el.children().eq(1);
-        let mapUrlEl = $('input[name="map_url"]', propsEl);
-        if (mapUrlEl.length) {
-            mapUrlEl.remove();
+    if (connected_el.length) {
+        if (conn.photo) {
+            grw_change_photo(connected_el, conn.photo);
         }
-        propsEl.prepend('<input type="hidden" name="map_url" value="' + conn.props.map_url + '" class="grw-connect-prop" readonly="">');
+        if (conn.props && conn.props.map_url) {
+            let propsEl = connected_el.children().eq(1);
+            let mapUrlEl = $('input[name="map_url"]', propsEl);
+            if (mapUrlEl.length) {
+                mapUrlEl.remove();
+            }
+            propsEl.prepend('<input type="hidden" name="map_url" value="' + conn.props.map_url + '" class="grw-connect-prop" readonly="">');
+        }
     } else if (!connected_el.length) {
         connected_el = $('<div class="grw-connection"></div>')[0];
         connected_el.id = connected_id;
@@ -1388,8 +1386,6 @@ function grw_change_photo(el, photo_url) {
     place_photo_hidden.val(photo_url);
     place_photo_img.attr('src', photo_url);
     place_photo_img.show();
-
-    grw_serialize_connections();
 }
 
 function grw_popup(url, width, height, cb) {
